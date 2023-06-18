@@ -11,6 +11,7 @@ import {
 import { ScrollView } from 'react-native';
 import RenderCalendar from './renderCalendar';
 import moment, { Moment } from 'moment';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const CalendarMonth: React.FC = () => {
   const animatedValue = useState(new Animated.Value(0))[0];
@@ -37,7 +38,7 @@ const CalendarMonth: React.FC = () => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const itemHeight = 190;
     const newTopItemIndex = Math.floor(offsetY / itemHeight);
-    if(newTopItemIndex !== topItemIndex)
+    if (newTopItemIndex !== topItemIndex)
       setTopItemIndex(newTopItemIndex);
 
     // const offsetY = event.nativeEvent.contentOffset.y;
@@ -50,7 +51,7 @@ const CalendarMonth: React.FC = () => {
     //     duration: 300,
     //     useNativeDriver: false,
     //   }).start();
-    
+
 
     if (isAtBottom && loader == false) {
       setLoader(true);
@@ -69,15 +70,15 @@ const CalendarMonth: React.FC = () => {
   };
 
   const getOverlayPosition = () => {
-    const inputRange = [newTopItemIndex,newTopItemIndex]
-    const outputRange = [newTopItemIndex,newTopItemIndex]
+    const inputRange = [newTopItemIndex, newTopItemIndex]
+    const outputRange = [newTopItemIndex, newTopItemIndex]
     return animatedValue.interpolate({
-        inputRange,
-        outputRange,
-        extrapolate: 'clamp',
+      inputRange,
+      outputRange,
+      extrapolate: 'clamp',
     });
-};
-console.log(getOverlayPosition())
+  };
+  console.log(getOverlayPosition())
 
   return (
     <View style={styles.container}>
@@ -97,15 +98,16 @@ console.log(getOverlayPosition())
         onScroll={handleScroll}
         ref={scrollViewRef}
       >
-        {numberOfMonths.map((item, index) => (
-          <RenderCalendar
-            opacity={topItemIndex === index}
-            // opacity={Number(getOverlayPosition()) === index}
-            num={item}
-            key={item}
-          />
-        ))}
-        
+        <GestureHandlerRootView >
+          {numberOfMonths.map((item, index) => (
+            <RenderCalendar
+              opacity={topItemIndex === index}
+              // opacity={Number(getOverlayPosition()) === index}
+              num={item}
+              key={item}
+            />
+          ))}
+        </GestureHandlerRootView>
         {loader && <ActivityIndicator size={'large'} />}
       </ScrollView>
     </View>
