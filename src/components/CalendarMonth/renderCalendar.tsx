@@ -1,33 +1,38 @@
-import React, { useRef } from 'react';
+import React, { useRef, } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import moment, { Moment } from 'moment';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { PinchGestureHandler, State, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+import { PinchGestureHandler, State,PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 
 
 type RenderCalendarTypes = {
   num: number;
-  opacity: boolean
+  opacity: boolean,
+  handleZoomIn :any
 };
 
-const RenderCalendar = ({ opacity, num }: RenderCalendarTypes): JSX.Element => {
+const RenderCalendar = ({ opacity, num, handleZoomIn }: RenderCalendarTypes): JSX.Element => {
   const currentDate1 = moment().clone().add(num, 'month');
   // useState<Moment>(moment().clone().add(num,'month'));
   const monthStart: Moment = currentDate1.clone().startOf('month');
   const monthEnd: Moment = currentDate1.clone().endOf('month');
   const startDate: Moment = monthStart.clone().startOf('week');
   const endDate: Moment = monthEnd.clone().endOf('week');
+
+  
+
   let scale = useSharedValue(1);
   let baseScale = useSharedValue(1);
   const pinchRef = useRef();
 
 
-  const pinchGestureHandler = useAnimatedGestureHandler({
-    onActive: ({ scale: pinchScale }) => {
+  const pinchGestureHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
+    onActive: ({ scale: pinchScale }:any) => {
       scale.value = baseScale.value * pinchScale;
     },
     onEnd: () => {
       baseScale.value = scale.value;
+      // scale.value = withTiming(1);
     },
   });
 
@@ -37,21 +42,19 @@ const RenderCalendar = ({ opacity, num }: RenderCalendarTypes): JSX.Element => {
     // }
     if (scale.value > 1) {
       return {
-        transform: [{ scale: scale.value > 1.1 ? 1.1 : scale.value }],
+        transform: [{ scaleY: scale.value > 1.2 ? 1.2 : scale.value }],
       }
     }
     else {
       return {
-        transform: [{ scale: scale.value < 0.95 ? 0.95 : scale.value }],
+        transform: [{ scaleY: scale.value < 0.95 ? 0.95 : scale.value }],
       };
     }
   });
 
-  const handleZoomEnd = () => {
-    console.warn(" I am zoomed in")
-  };
-
-
+  // const handleZoomEnd = () => {
+  //   console.warn(" I am zoomed in")
+  // };
 
 
   const calendar: JSX.Element[] = [];
@@ -103,21 +106,18 @@ const RenderCalendar = ({ opacity, num }: RenderCalendarTypes): JSX.Element => {
     <>
        <PinchGestureHandler
                 ref={pinchRef}
-                onGestureEvent={opacity && pinchGestureHandler}
+                onGestureEvent={opacity && pinchGestureHandler }
                 onHandlerStateChange={ opacity ?  ({ nativeEvent }) => {
                     if (nativeEvent.state === State.END) {
-                        console.log(scale.value, baseScale.value)
                         if (scale.value < 1) {
-                            console.log("go back")
+                            console.warn("go back")
                             return
                         }
-                        handleZoomEnd();
+                        handleZoomIn();
                     }
                 }:undefined}
             >
                 <Animated.View style={[styles.calendarContainer,(opacity && animatedStyle), { opacity: opacity ? 1 : 0.3 }]} key={num}>
-                
-
             {calendar}
                 </Animated.View>
             </PinchGestureHandler>
