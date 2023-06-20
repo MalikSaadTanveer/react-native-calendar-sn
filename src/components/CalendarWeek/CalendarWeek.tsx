@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
+  GestureHandlerRootView
 } from 'react-native-gesture-handler';
 
 import Animated, {
@@ -222,6 +223,9 @@ const CalendarWeek = () => {
   }
 
   return (
+    <GestureHandlerRootView
+      style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
+    >
     <PinchGestureHandler onGestureEvent={pinchHandler}
     >
       <Animated.View style={[styles.container]}>
@@ -266,6 +270,7 @@ const CalendarWeek = () => {
         </Animated.ScrollView>
       </Animated.View>
     </PinchGestureHandler>
+    </GestureHandlerRootView>
   );
 };
 

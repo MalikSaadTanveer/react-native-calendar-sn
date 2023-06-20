@@ -1,16 +1,21 @@
 import 'react-native-gesture-handler';
 
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import RenderCalendar from './renderCalendar';
 import moment, { Moment } from 'moment';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
-import CalendarWeek from '../CalendarWeek/CalendarWeek';
+
 import { colors } from '../../utils/colors';
 
-const CalendarMonth: React.FC = () => {
-  const [calendarStates, setCalendarStates] = useState(0);
+const CalendarMonth: React.FC = ({ navigation }: any) => {
+  const [viewHeight, setViewHeight] = useState(0);
 
   const [startMonth, setStartMonth] = useState<Moment>(
     moment().clone().add(0, 'month')
@@ -32,7 +37,8 @@ const CalendarMonth: React.FC = () => {
       parseInt(contentSize.height);
 
     const offsetY = event.nativeEvent.contentOffset.y;
-    const itemHeight = 190;
+    // const itemHeight = 190;
+    const itemHeight = viewHeight;
     const newTopItemIndex = Math.floor(offsetY / itemHeight);
     if (newTopItemIndex !== topItemIndex) setTopItemIndex(newTopItemIndex);
 
@@ -52,13 +58,6 @@ const CalendarMonth: React.FC = () => {
     }
   };
 
-  const handleZoomIn = () => {
-    setCalendarStates(1);
-  };
-  const handleZoomOut = () => {
-    setCalendarStates(0);
-  };
-
   return (
     <GestureHandlerRootView
       style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
@@ -67,42 +66,32 @@ const CalendarMonth: React.FC = () => {
       {/* <View style={styles.buttonContainer}>
           <Text style={styles.header}>{startMonth.format('MMMM YYYY')}</Text>
         </View> */}
-
-      {calendarStates === 0 ? (
-        <>
-          <View style={styles.dayContainer}>
-            {daysOfTheWeek.map((item, index) => (
-              <Text style={styles.dayText} key={index}>
-                {item}
-              </Text>
-            ))}
-          </View>
-          <Animated.ScrollView
-            contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
-            onScroll={handleScroll}
-            ref={scrollViewRef}
-          >
-            {numberOfMonths.map((item, index) => (
-              <RenderCalendar
-                opacity={topItemIndex === index}
-                num={item}
-                key={item}
-                handleZoomIn={handleZoomIn}
-              />
-            ))}
-            {loader && <ActivityIndicator size={'large'} />}
-          </Animated.ScrollView>
-        </>
-      ) : (
-        // <Animated.ScrollView
-        //   contentContainerStyle={{ flexGrow: 1 }}
-        //   onScroll={handleScroll}
-        //   ref={scrollViewRef}
-        // >
-        <CalendarWeek />
-        // </Animated.ScrollView>
-      )}
-      {/* </View> */}
+      <>
+        <View style={styles.dayContainer}>
+          {daysOfTheWeek.map((item, index) => (
+            <Text style={styles.dayText} key={index}>
+              {item}
+            </Text>
+          ))}
+        </View>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
+          onScroll={handleScroll}
+          ref={scrollViewRef}
+          snapToInterval={210}
+        >
+          {numberOfMonths.map((item, index) => (
+            <RenderCalendar
+              opacity={topItemIndex === index}
+              num={item}
+              key={item}
+              setViewHeight={setViewHeight}
+              navigation={navigation}
+            />
+          ))}
+          {loader && <ActivityIndicator size={'large'} />}
+        </ScrollView>
+      </>
     </GestureHandlerRootView>
   );
 };
