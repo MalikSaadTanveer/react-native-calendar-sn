@@ -1,9 +1,9 @@
-import { StyleSheet, Text,View, Dimensions,Image } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image,ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
-  GestureHandlerRootView
+  GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 
 import Animated, {
@@ -16,19 +16,23 @@ import { colors } from '../../utils/colors';
 import moment from 'moment';
 import { TouchableOpacity } from 'react-native';
 // const { width, height } = Dimensions.get('window');
-import plusImage from '../../assets/plus.png'
+import plusImage from '../../assets/plus.png';
+// import { useRoute } from '@react-navigation/native';
+import { navigationString } from '../../utils/navigationString';
+// import { SharedElement } from 'react-navigation-shared-element'
 
-const CalendarWeek = () => {
+const screenWidth = Dimensions.get('window').width;
+const CalendarWeek = ({ navigation, route }: any) => {
+  // const route = useRoute();
+  const { calendar }  = route.params
   const scale = useSharedValue(1);
   const focalX = useSharedValue(0);
   const focalY = useSharedValue(0);
   const [weeks, setWeeks] = useState([]);
   const [slotHighlight, setSlotHightlight] = useState('');
-
-
-
+  console.log(calendar.year, calendar.month - 1, calendar.date)
   useEffect(() => {
-    const date = moment([2023, 6 - 1, 19]);
+    const date = moment([calendar.year, calendar.month - 1, calendar.date]);
     const startOfWeek = date.clone().startOf('isoWeek');
     const endOfWeek = date.clone().endOf('isoWeek');
     let weekArr: any = [{ day: null, date: null }];
@@ -43,9 +47,11 @@ const CalendarWeek = () => {
         day: dayOfWeek,
         date: dayOfMonth,
       });
-      console.log(dayOfWeek, dayOfMonth);
+      // console.log(dayOfWeek, dayOfMonth);
     }
 
+    // setWeeks(weekArr);
+    // let a: any = [...weekArr, ...weekArr];
     setWeeks(weekArr);
   }, []);
 
@@ -68,7 +74,7 @@ const CalendarWeek = () => {
         // { translateY: focalY.value },
         // { translateX: -width / 2 },
         // { translateY: -height / 2 },
-        { scaleY:scale.value > 1 ? scale.value : 1 },
+        { scaleY: scale.value > 1 ? scale.value : 1 },
         // { translateX: -focalX.value },
         // { translateY: -focalY.value },
         // { translateX: width / 2 },
@@ -91,7 +97,7 @@ const CalendarWeek = () => {
       //   { translateY: height / 2 },
       // ],
       // marginHorizontal:scale.value * 4
-      fontSize: 12 - (scale.value * 2)
+      fontSize: 12 - scale.value * 2,
     };
   });
 
@@ -218,58 +224,196 @@ const CalendarWeek = () => {
     },
   ];
 
-  const handleSlotButton = (index:number,ind:number)=>{
-    setSlotHightlight(`${index}${ind}`)
-  }
+  const handleSlotButton = (index: number, ind: number) => {
+    setSlotHightlight(`${index}${ind}`);
+  };
 
   return (
     <GestureHandlerRootView
       style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
     >
-    <PinchGestureHandler onGestureEvent={pinchHandler}
-    >
-      <Animated.View style={[styles.container]}>
-        <Animated.View style={[styles.top,{zIndex:1}]}>
-          {weeks?.length > 0 &&
-            weeks.map((item: any, index: number) => (
-              <Animated.View
-                key={index}
-                style={[
-                  styles.card,
-                  {backgroundColor:
-                    index === 0 ? 'transparent' : colors.backgroundColor,}
-                ]}
-              >
-                <Text style={styles.weekDay}>{item.day}</Text>
-                <Text style={styles.weekDate}>{item.date}</Text>
-              </Animated.View>
-            ))}
-        </Animated.View>
-        
-        <Animated.ScrollView style={[styles.slotsContainer,slotStyle]}>
-        
-          {/* <AView style={rStyle} ></View> */}
-          {timeSlots.map((item, index) => (
-            <Animated.View key={index} style={styles.slotsInner}>
-              <Animated.View style={styles.timeContainer}>
-                <Animated.Text style={[styles.timeText,timeFontStyle]}>{item.time}</Animated.Text>
-              </Animated.View>
-              {
-                Array.from({length: 7}, (_, index) => index + weeks[1]?.date || 0 ).map((_,ind) =>(
-                  <TouchableOpacity style={[styles.singleSlot]} key={ind} onPress={()=>handleSlotButton(index,ind)}>
-                    {
-                      slotHighlight === `${index}${ind}` && 
-                      <TouchableOpacity style={styles.clickSlot} onPress={()=>console.warn("I am pressed")}>  
-                      <Image source={plusImage} style={{width:12,height:12}} />
-                    </TouchableOpacity>}
-                  </TouchableOpacity>
-                ))
-              }
-            </Animated.View>
-          ))}
+      {/* <SharedElement id={route.params.calendar} style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}> */}
+      <PinchGestureHandler onGestureEvent={pinchHandler}>
+        <Animated.ScrollView
+          horizontal
+          contentContainerStyle={{ flexGrow: 1 }}
+          snapToInterval={screenWidth }
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+        >
+          <Animated.View style={[styles.container]}>
+            <View style={[styles.top, { zIndex: 1 }]}>
+              {weeks?.length > 0 &&
+                weeks.map((item: any, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.card,
+                      {
+                        backgroundColor:
+                          index == 0 ? 'transparent' : colors.backgroundColor,
+                      },
+                    ]}
+                  >
+                    <Text style={styles.weekDay}>{item.day}</Text>
+                    <Text style={styles.weekDate}>{item.date}</Text>
+                  </View>
+                ))}
+            </View>
+
+            <Animated.ScrollView style={[styles.slotsContainer, slotStyle]}>
+              {/* <AView style={rStyle} ></View> */}
+              {timeSlots.map((item, index) => (
+                <Animated.View key={index} style={styles.slotsInner}>
+                  <Animated.View style={styles.timeContainer}>
+                    <Animated.Text style={[styles.timeText, timeFontStyle]}>
+                      {item.time}
+                    </Animated.Text>
+                  </Animated.View>
+                  {Array.from(
+                    { length: 7 },
+                    (_, index) => index + weeks[1]?.date || 0
+                  ).map((_, ind) => (
+                    <TouchableOpacity
+                      style={[styles.singleSlot]}
+                      key={ind}
+                      onPress={() => handleSlotButton(index, ind)}
+                    >
+                      {slotHighlight === `${index}${ind}` && (
+                        <TouchableOpacity
+                          style={styles.clickSlot}
+                          onPress={() =>
+                            navigation.navigate(navigationString.CalendarDate)
+                          }
+                        >
+                          <Image
+                            source={plusImage}
+                            style={{ width: 12, height: 12 }}
+                          />
+                        </TouchableOpacity>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </Animated.View>
+              ))}
+            </Animated.ScrollView>
+          </Animated.View>
+
+          <Animated.View style={[styles.container]}>
+            <View style={[styles.top, { zIndex: 1 }]}>
+              {weeks?.length > 0 &&
+                weeks.map((item: any, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.card,
+                      {
+                        backgroundColor:
+                          index == 0 ? 'transparent' : colors.backgroundColor,
+                      },
+                    ]}
+                  >
+                    <Text style={styles.weekDay}>{item.day}</Text>
+                    <Text style={styles.weekDate}>{item.date}</Text>
+                  </View>
+                ))}
+            </View>
+
+            <Animated.ScrollView style={[styles.slotsContainer, slotStyle]}>
+              {/* <AView style={rStyle} ></View> */}
+              {timeSlots.map((item, index) => (
+                <Animated.View key={index} style={styles.slotsInner}>
+                  <Animated.View style={styles.timeContainer}>
+                    <Animated.Text style={[styles.timeText, timeFontStyle]}>
+                      {item.time}
+                    </Animated.Text>
+                  </Animated.View>
+                  {Array.from(
+                    { length: 7 },
+                    (_, index) => index + weeks[1]?.date || 0
+                  ).map((_, ind) => (
+                    <TouchableOpacity
+                      style={[styles.singleSlot]}
+                      key={ind}
+                      onPress={() => handleSlotButton(index, ind)}
+                    >
+                      {slotHighlight === `${index}${ind}` && (
+                        <TouchableOpacity
+                          style={styles.clickSlot}
+                          onPress={() => console.warn('I am pressed')}
+                        >
+                          <Image
+                            source={plusImage}
+                            style={{ width: 12, height: 12 }}
+                          />
+                        </TouchableOpacity>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </Animated.View>
+              ))}
+            </Animated.ScrollView>
+          </Animated.View>
+
+          <Animated.View style={[styles.container]}>
+            <View style={[styles.top, { zIndex: 1 }]}>
+              {weeks?.length > 0 &&
+                weeks.map((item: any, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.card,
+                      {
+                        backgroundColor:
+                          index == 0 ? 'transparent' : colors.backgroundColor,
+                      },
+                    ]}
+                  >
+                    <Text style={styles.weekDay}>{item.day}</Text>
+                    <Text style={styles.weekDate}>{item.date}</Text>
+                  </View>
+                ))}
+            </View>
+
+            <Animated.ScrollView style={[styles.slotsContainer, slotStyle]}>
+              {/* <AView style={rStyle} ></View> */}
+              {timeSlots.map((item, index) => (
+                <Animated.View key={index} style={styles.slotsInner}>
+                  <Animated.View style={styles.timeContainer}>
+                    <Animated.Text style={[styles.timeText, timeFontStyle]}>
+                      {item.time}
+                    </Animated.Text>
+                  </Animated.View>
+                  {Array.from(
+                    { length: 7 },
+                    (_, index) => index + weeks[1]?.date || 0
+                  ).map((_, ind) => (
+                    <TouchableOpacity
+                      style={[styles.singleSlot]}
+                      key={ind}
+                      onPress={() => handleSlotButton(index, ind)}
+                    >
+                      {slotHighlight === `${index}${ind}` && (
+                        <TouchableOpacity
+                          style={styles.clickSlot}
+                          onPress={() => console.warn('I am pressed')}
+                        >
+                          <Image
+                            source={plusImage}
+                            style={{ width: 12, height: 12 }}
+                          />
+                        </TouchableOpacity>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </Animated.View>
+              ))}
+            </Animated.ScrollView>
+          </Animated.View>
+
         </Animated.ScrollView>
-      </Animated.View>
-    </PinchGestureHandler>
+      </PinchGestureHandler>
+      {/* </SharedElement> */}
     </GestureHandlerRootView>
   );
 };
@@ -280,6 +424,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.backgroundColor,
+    width: screenWidth,
   },
   top: {
     backgroundColor: colors.secondary,
@@ -306,37 +451,37 @@ const styles = StyleSheet.create({
   slotsContainer: {
     // backgroundColor: 'red',
     // width:'140%'
-    flexGrow:1
+    flexGrow: 1,
   },
-  clickSlot:{
-    width:'100%',
-    height:'100%',
-    borderWidth:0.5,
-    borderColor:colors.primary,
-    justifyContent:'center',
-    alignItems:'center',
-    borderRadius:8,
+  clickSlot: {
+    width: '100%',
+    height: '100%',
+    borderWidth: 0.5,
+    borderColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
   },
-  timeContainer:{
-    width:'12.3%',
-    height:60,
-    justifyContent:'flex-end',
-    alignItems:'flex-end',
+  timeContainer: {
+    width: '12.3%',
+    height: 60,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
     // marginRight:4,
-    paddingRight:4,
+    paddingRight: 4,
   },
   timeText: {
     color: colors.tertiary,
-    fontSize:12,
+    fontSize: 12,
   },
-  singleSlot:{
-    backgroundColor:'transparent',
-    borderWidth:0.3,
-    borderColor:'rgba(0, 0, 0, 0.16)',
-    width:'12.1%',
-    height:60,
+  singleSlot: {
+    backgroundColor: 'transparent',
+    borderWidth: 0.3,
+    borderColor: 'rgba(0, 0, 0, 0.16)',
+    width: '12.1%',
+    height: 60,
   },
-  slotsInner:{
-    flexDirection:'row'
-  }
+  slotsInner: {
+    flexDirection: 'row',
+  },
 });

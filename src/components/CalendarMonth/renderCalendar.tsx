@@ -13,12 +13,13 @@ import {
   PinchGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import { navigationString } from '../../utils/navigationString';
+import { colors } from '../../utils/colors';
 
 type RenderCalendarTypes = {
   num: number;
   opacity: boolean;
   setViewHeight: any;
-  navigation:any
+  navigation: any;
 };
 
 const RenderCalendar = ({
@@ -82,15 +83,45 @@ const RenderCalendar = ({
   // };
 
   const handleZoomIn = () => {
-    console.log("I am going to calendarWeek")
-    navigation.navigate(navigationString.CalendarWeek)
+    console.log('I am going to calendarWeek');
+    const actualData = currentDate.add(-1, 'month');
+    const data = {
+      year:
+        actualData.format('YYYY-MM') == moment(new Date()).format('YYYY-MM')
+          ? parseInt(moment(new Date()).format('YYYY'))
+          : parseInt(actualData.format('YYYY')),
+      month:
+        actualData.format('YYYY-MM') == moment(new Date()).format('YYYY-MM')
+          ? parseInt(moment(new Date()).format('MM'))
+          : parseInt(actualData.format('MM')),
+      date:
+        actualData.format('YYYY-MM') == moment(new Date()).format('YYYY-MM')
+          ? parseInt(moment(new Date()).format('DD'))
+          : 1,
+    };
+    console.log(data);
+    navigation.navigate(navigationString.CalendarWeek, {
+      calendar: data
+    });
+    // console.log(currentDate.add(-1,'month').format('YYYY-MM'))
+    // console.log(moment(new Date()).format('YYYY-MM'))
   };
-  const handleZoomOut = () => {
-    
-  };
+  const handleZoomOut = () => {};
 
   const calendar: JSX.Element[] = [];
   let currentDate: Moment = startDate.clone();
+
+  const getBorder = (date: any) => {
+    if (moment(new Date()).format('YYYY-MM-DD') === date) {
+      return {
+        borderColor: colors.primary,
+        borderRadius: 6,
+        borderWidth: 1,
+      };
+    } else {
+      return undefined;
+    }
+  };
 
   while (currentDate.isSameOrBefore(endDate)) {
     const week: JSX.Element[] = [];
@@ -112,9 +143,15 @@ const RenderCalendar = ({
             style={styles.row}
             key={`${currentDate.format('YYYY-MM-DD')}-week-${i}`}
           >
-            <View style={styles.dateContainer}>
+            <View
+              style={{
+                ...styles.dateContainer,
+                ...getBorder(currentDate.format('YYYY-MM-DD')),
+              }}
+            >
               <Text style={styles.dateText}>{currentDate.format('D')}</Text>
-              <View style={styles.dateTextBottom} />
+              {/* <Text style={styles.dateText}>{moment(new Date()).format('YYYY-MM-DD')}</Text> */}
+              {/* <View style={styles.dateTextBottom} /> */}
             </View>
           </View>
         );
@@ -123,9 +160,38 @@ const RenderCalendar = ({
     }
 
     calendar.push(
+      // <PinchGestureHandler
+      //   ref={pinchRef}
+      //   onGestureEvent={opacity && pinchGestureHandler}
+      //   onHandlerStateChange={
+      //     opacity
+      //       ? ({ nativeEvent }) => {
+      //           if (nativeEvent.state === State.END) {
+      //             if (scale.value < 1) {
+      //               console.warn('go back');
+      //               return;
+      //             }
+      //             handleZoomIn();
+      //           }
+      //         }
+      //       : undefined
+      //   }
+      // >
+      //   <Animated.View ref={viewRef}>
+      //     <Animated.View
+      //       style={[
+      //         styles.calendarContainer,
+      //         opacity && animatedStyle,
+      //         { opacity: opacity ? 1 : 0.3 },
+      //       ]}
+      //       key={num}
+      //     >
       <View style={styles.row} key={`${currentDate.format('YYYY-MM-DD')}-week`}>
         {week}
       </View>
+      //     </Animated.View>
+      //   </Animated.View>
+      // </PinchGestureHandler>
     );
   }
 
@@ -140,7 +206,6 @@ const RenderCalendar = ({
         onHandlerStateChange={
           opacity
             ? ({ nativeEvent }) => {
-                console.log("hello")
                 if (nativeEvent.state === State.END) {
                   if (scale.value < 1) {
                     console.warn('go back');
@@ -195,7 +260,8 @@ const styles = StyleSheet.create({
   dateContainer: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingVertical: 6,
+    marginVertical: 4,
     width: 34,
     position: 'relative',
   },
@@ -203,14 +269,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
   },
-  dateTextBottom: {
-    height: 16,
-    width: 34,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 4,
-    position: 'absolute',
-    bottom: 0,
-  },
+  // dateTextBottom: {
+  //   height: 16,
+  //   width: 34,
+  //   backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  //   borderRadius: 4,
+  //   position: 'absolute',
+  //   bottom: 0,
+  // },
 });
 
 export default RenderCalendar;

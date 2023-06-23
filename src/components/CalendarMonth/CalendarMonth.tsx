@@ -11,6 +11,7 @@ import {
 import RenderCalendar from './renderCalendar';
 import moment, { Moment } from 'moment';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+// import { SharedElement } from 'react-navigation-shared-element';
 
 import { colors } from '../../utils/colors';
 
@@ -37,8 +38,8 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
       parseInt(contentSize.height);
 
     const offsetY = event.nativeEvent.contentOffset.y;
-    // const itemHeight = 190;
-    const itemHeight = viewHeight;
+    const itemHeight = 190;
+    // const itemHeight = viewHeight;
     const newTopItemIndex = Math.floor(offsetY / itemHeight);
     if (newTopItemIndex !== topItemIndex) setTopItemIndex(newTopItemIndex);
 
@@ -78,16 +79,18 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
           contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
           onScroll={handleScroll}
           ref={scrollViewRef}
-          snapToInterval={210}
+          // snapToInterval={210}
         >
           {numberOfMonths.map((item, index) => (
-            <RenderCalendar
-              opacity={topItemIndex === index}
-              num={item}
-              key={item}
-              setViewHeight={setViewHeight}
-              navigation={navigation}
-            />
+            // <SharedElement id={`calendar${item}`}>
+              <RenderCalendar
+                opacity={topItemIndex === index}
+                num={item}
+                key={item}
+                setViewHeight={setViewHeight}
+                navigation={navigation}
+              />
+            // </SharedElement>
           ))}
           {loader && <ActivityIndicator size={'large'} />}
         </ScrollView>
