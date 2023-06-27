@@ -17,9 +17,11 @@ import { colors } from '../../utils/colors';
 
 type RenderCalendarTypes = {
   num: number;
-  opacity: boolean;
-  setViewHeight: any;
-  navigation: any;
+  opacity?: boolean;
+  setViewHeight?: any;
+  navigation?: any;
+  setScrollEnabled?:any,
+  setDynamicViewHeight:any
 };
 
 const RenderCalendar = ({
@@ -27,7 +29,10 @@ const RenderCalendar = ({
   num,
   setViewHeight,
   navigation,
+  setScrollEnabled,
+  setDynamicViewHeight
 }: RenderCalendarTypes): JSX.Element => {
+  // console.log("num",num)
   const currentDate1 = moment().clone().add(num, 'month');
   // useState<Moment>(moment().clone().add(num,'month'));
   const monthStart: Moment = currentDate1.clone().startOf('month');
@@ -35,6 +40,9 @@ const RenderCalendar = ({
   const startDate: Moment = monthStart.clone().startOf('week');
   const endDate: Moment = monthEnd.clone().endOf('week');
 
+  const dynamicViewRef:any = useRef(null);
+ 
+  
   const viewRef = useRef(null);
   useEffect(() => {
     if (viewRef.current) {
@@ -58,7 +66,7 @@ const RenderCalendar = ({
         // scale.value =  pinchScale;
       },
       onEnd: () => {
-        baseScale.value = scale.value;
+        // baseScale.value = scale.value;
         // scale.value = withTiming(1);
       },
     });
@@ -69,10 +77,13 @@ const RenderCalendar = ({
     // }
     if (scale.value > 1) {
       return {
+        // paddingVertical:20 * scale.value,
         transform: [{ scaleY: scale.value > 1.2 ? 1.2 : scale.value }],
+        // transform: [{ scaleY: scale.value }],
       };
     } else {
       return {
+        // paddingVertical:  scale.value,
         transform: [{ scaleY: scale.value < 0.95 ? 0.95 : scale.value }],
       };
     }
@@ -81,10 +92,10 @@ const RenderCalendar = ({
   // const handleZoomEnd = () => {
   //   console.warn(" I am zoomed in")
   // };
-
+  
   const handleZoomIn = () => {
     console.log('I am going to calendarWeek');
-    const actualData = currentDate.add(-1, 'month');
+    const actualData = moment().clone().add(num,'month');
     const data = {
       year:
         actualData.format('YYYY-MM') == moment(new Date()).format('YYYY-MM')
@@ -99,10 +110,11 @@ const RenderCalendar = ({
           ? parseInt(moment(new Date()).format('DD'))
           : 1,
     };
-    console.log(data);
+    console.log("data",data);
     navigation.navigate(navigationString.CalendarWeek, {
       calendar: data
     });
+    scale.value = 1;
     // console.log(currentDate.add(-1,'month').format('YYYY-MM'))
     // console.log(moment(new Date()).format('YYYY-MM'))
   };
@@ -206,10 +218,14 @@ const RenderCalendar = ({
         onHandlerStateChange={
           opacity
             ? ({ nativeEvent }) => {
+                if(nativeEvent.state === State.BEGAN){
+                 
+                }
                 if (nativeEvent.state === State.END) {
                   if (scale.value < 1) {
                     console.warn('go back');
                     return;
+                   
                   }
                   handleZoomIn();
                 }
@@ -219,6 +235,8 @@ const RenderCalendar = ({
       >
         <Animated.View ref={viewRef}>
           <Animated.View
+           ref={dynamicViewRef}
+       
             style={[
               styles.calendarContainer,
               opacity && animatedStyle,

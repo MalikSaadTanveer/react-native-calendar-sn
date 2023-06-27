@@ -161,7 +161,6 @@
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.12",
-    "@react-navigation/stack": "5.1.1",
     "date-fns": "^2.30.0",
     "moment": "^2.29.4",
     "react-native-gesture-handler": "^2.11.0",
