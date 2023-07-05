@@ -5,12 +5,14 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, } from 'react';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
   GestureHandlerRootView,
+  
 } from 'react-native-gesture-handler';
 
 import Animated, {
@@ -27,6 +29,7 @@ import plusImage from '../../assets/plus.png';
 // import { useRoute } from '@react-navigation/native';
 import { navigationString } from '../../utils/navigationString';
 // import { SharedElement } from 'react-navigation-shared-element'
+import { startOfMonth, endOfMonth, eachDayOfInterval, format } from 'date-fns';
 
 const screenWidth = Dimensions.get('window').width;
 const CalendarWeek = ({ navigation, route }: any) => {
@@ -37,7 +40,8 @@ const CalendarWeek = ({ navigation, route }: any) => {
   const focalY = useSharedValue(0);
   const [weeks, setWeeks] = useState<any>([]);
   const [slotHighlight, setSlotHightlight] = useState('');
-
+  const [loader, setLoader] = useState(true);
+  const scrollViewRef = useRef(null)
   const timeSlots = [
     {
       time: '1 AM',
@@ -163,7 +167,11 @@ const CalendarWeek = ({ navigation, route }: any) => {
   // console.log(calendar.year, calendar.month - 1, calendar.date)
   useEffect(() => {
     // weeksSetup();
-    monthSetup();
+
+    setTimeout(() => {
+      // monthSetup();
+      monthSetup2();
+    }, 100);
   }, []);
 
   const weeksSetup = () => {
@@ -189,42 +197,81 @@ const CalendarWeek = ({ navigation, route }: any) => {
     // setWeeks((pre): any => [...pre, ...weekArr]);
   };
 
-  const monthSetup = () => {
-    const date = moment([calendar.year, calendar.month - 1, calendar.date]);
-    const endOfMonth = date.clone().endOf('month'); // Get the end of the month
-    let weekArr: any[] = []; // Create an array to store the weeks
+  const monthSetup2 = () => {
 
-    while (date.isSameOrBefore(endOfMonth)) {
-      let week: any[] = [
-        { 
-            day: null, 
-            date: null, 
-            month:calendar.month -1,
-            year: calendar.year,
-            timeSlots: timeSlots, 
-        }
-    ]; // Create an array to store the days of the week
-
-      // Iterate over the days of the week (starting from Sunday)
-      for (let i = 0; i < 7; i++) {
-        const dayOfWeek = date.format('dddd').substring(0, 3);
-        const dayOfMonth = date.format('DD');
-
+    const startDate = new Date(calendar.year, calendar.month - 1, calendar.date);
+    const endDate = endOfMonth(startDate);
+    const weekArr = [];
+    
+    let currentDate = startDate;
+    while (currentDate <= endDate) {
+      const week = [
+        {
+          day: null,
+          date: null,
+          month: calendar.month - 1,
+          year: calendar.year,
+          // timeSlots: timeSlots,
+        },
+      ];
+    
+      const daysOfWeek = eachDayOfInterval({ start: currentDate, end: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 6) });
+      daysOfWeek.forEach((day) => {
+        const dayOfWeek = format(day, 'EEEE').substring(0, 3);
+        const dayOfMonth = format(day, 'dd');
+    
         week.push({
           day: dayOfWeek,
           date: dayOfMonth,
-          timeSlots: timeSlots,
+          // timeSlots: timeSlots,
         });
-
-        date.add(1, 'day'); // Move to the next day
-      }
-
-      weekArr.push(week); // Add the week to the array of weeks
+    
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1); // Move to the next day
+      });
+    
+      weekArr.push(week);
     }
-
+    
+    setLoader(false);
+    console.log("I am full weekArr",weekArr)
     setWeeks(weekArr);
+    
   };
-  console.log('weeks', weeks);
+  // const monthSetup = () => {
+  //   const date = moment([calendar.year, calendar.month - 1, calendar.date]);
+  //   const endOfMonth = date.clone().endOf('month'); // Get the end of the month
+  //   let weekArr: any[] = []; // Create an array to store the weeks
+
+  //   while (date.isSameOrBefore(endOfMonth)) {
+  //     let week: any[] = [
+  //       {
+  //         day: null,
+  //         date: null,
+  //         month: calendar.month - 1,
+  //         year: calendar.year,
+  //         timeSlots: timeSlots,
+  //       },
+  //     ]; // Create an array to store the days of the week
+
+  //     // Iterate over the days of the week (starting from Sunday)
+  //     for (let i = 0; i < 7; i++) {
+  //       const dayOfWeek = date.format('dddd').substring(0, 3);
+  //       const dayOfMonth = date.format('DD');
+
+  //       week.push({
+  //         day: dayOfWeek,
+  //         date: dayOfMonth,
+  //         timeSlots: timeSlots,
+  //       });
+
+  //       date.add(1, 'day'); // Move to the next day
+  //     }
+
+  //     weekArr.push(week); // Add the week to the array of weeks
+  //   }
+  //   setLoader(false);
+  //   setWeeks(weekArr);
+  // };
 
   const pinchHandler =
     useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
@@ -272,83 +319,103 @@ const CalendarWeek = ({ navigation, route }: any) => {
     };
   });
 
-  const handleSlotButton = (str:string) => {
+  const handleSlotButton = (str: string) => {
     setSlotHightlight(str);
   };
 
   return (
     // <GestureHandlerRootView style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}>
+    <>
+      {loader ? (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <PinchGestureHandler onGestureEvent={pinchHandler}
+         
+        >
+          <ScrollView
+            horizontal
+            contentContainerStyle={{ flexGrow: 1 }}
+            snapToInterval={screenWidth}
+            decelerationRate={0.2}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled 
+            
+          >
+            {weeks?.map((fullWeek: any, fullWeekindex: any) => (
+              <Animated.View key={fullWeekindex} style={[styles.container]}>
+                <View style={[styles.top, { zIndex: 1 }]}>
+                  {fullWeek?.length > 0 &&
+                    fullWeek.map((itemWeek: any, index: number) => (
+                      <View
+                        key={index}
+                        style={[
+                          styles.card,
+                          {
+                            backgroundColor:
+                              index == 0
+                                ? 'transparent'
+                                : colors.backgroundColor,
+                          },
+                        ]}
+                      >
+                        <Text style={styles.weekDay}>{itemWeek.day}</Text>
+                        <Text style={styles.weekDate}>{itemWeek.date}</Text>
+                      </View>
+                    ))}
+                </View>
 
-    <PinchGestureHandler onGestureEvent={pinchHandler}>
-      <Animated.ScrollView
-        horizontal
-        contentContainerStyle={{ flexGrow: 1 }}
-        snapToInterval={screenWidth}
-        decelerationRate={0.2}
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-      >
-        {weeks?.map((fullWeek: any, fullWeekindex: any) => (
-          <Animated.View key={fullWeekindex} style={[styles.container]}>
-            <View style={[styles.top, { zIndex: 1 }]}>
-              {fullWeek?.length > 0 &&
-                fullWeek.map((itemWeek: any, index: number) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.card,
-                      {
-                        backgroundColor:
-                          index == 0 ? 'transparent' : colors.backgroundColor,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.weekDay}>{itemWeek.day}</Text>
-                    <Text style={styles.weekDate}>{itemWeek.date}</Text>
-                  </View>
-                ))}
-            </View>
-
-            <Animated.ScrollView style={[styles.slotsContainer, slotStyle]}>
-              {timeSlots.map((item, index) => (
-                <Animated.View key={index} style={styles.slotsInner}>
-                  <Animated.View style={styles.timeContainer}>
-                    <Animated.Text style={[styles.timeText, timeFontStyle]}>
-                      {item.time}
-                    </Animated.Text>
-                  </Animated.View>
-                  {Array.from(
-                    { length: item.slots },
-                    (_, index) => index + weeks[1]?.date || 0
-                  ).map((_, ind) => (
-                    <TouchableOpacity
-                      style={[styles.singleSlot]}
-                      key={ind}
-                      onPress={() => handleSlotButton(`${fullWeek[0].year}-${fullWeek[0].month}-${fullWeekindex}-${index}-${ind}`)}
-                    >
-                      {slotHighlight === `${fullWeek[0].year}-${fullWeek[0].month}-${fullWeekindex}-${index}-${ind}` && (
+                <Animated.ScrollView style={[styles.slotsContainer, slotStyle]} >
+                  {timeSlots.map((item, index) => (
+                    <Animated.View key={index} style={styles.slotsInner}>
+                      <Animated.View style={styles.timeContainer}>
+                        <Animated.Text style={[styles.timeText, timeFontStyle]}>
+                          {item.time}
+                        </Animated.Text>
+                      </Animated.View>
+                      {Array.from(
+                        { length: item.slots },
+                        (_, index) => index + weeks[1]?.date || 0
+                      ).map((_, ind) => (
                         <TouchableOpacity
-                          style={styles.clickSlot}
+                          style={[styles.singleSlot]}
+                          key={ind}
                           onPress={() =>
-                            navigation.navigate(navigationString.CalendarDate)
+                            handleSlotButton(
+                              `${fullWeek[0].year}-${fullWeek[0].month}-${fullWeekindex}-${index}-${ind}`
+                            )
                           }
                         >
-                          <Image
-                            source={plusImage}
-                            style={{ width: 12, height: 12 }}
-                          />
+                          {slotHighlight ===
+                            `${fullWeek[0].year}-${fullWeek[0].month}-${fullWeekindex}-${index}-${ind}` && (
+                            <TouchableOpacity
+                              style={styles.clickSlot}
+                              onPress={() =>
+                                navigation.navigate(
+                                  navigationString.CalendarDate
+                                )
+                              }
+                            >
+                              <Image
+                                source={plusImage}
+                                style={{ width: 12, height: 12 }}
+                              />
+                            </TouchableOpacity>
+                          )}
                         </TouchableOpacity>
-                      )}
-                    </TouchableOpacity>
+                      ))}
+                    </Animated.View>
                   ))}
-                </Animated.View>
-              ))}
-            </Animated.ScrollView>
-          </Animated.View>
-        ))}
-      </Animated.ScrollView>
-    </PinchGestureHandler>
-
+                </Animated.ScrollView>
+              </Animated.View>
+            ))}
+          </ScrollView>
+        </PinchGestureHandler>
+      )}
+    </>
     // <View>
     //   <Text>Hello</Text>
     // </View>

@@ -31,6 +31,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   );
   const [loader, setLoader] = useState(false);
   const scrollViewRef: any = useRef(null);
+  const monthNamesRef: any = useRef(null);
   var daysOfTheWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   const handleScroll = (event: any): void => {
@@ -63,27 +64,16 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     }
   };
 
-  const DEBOUNCE_DELAY = 200;
-  let debounceTimeout: any = null;
-
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
     if (viewableItems.length > 0 ) {
       console.log('Hello', viewableItems[0]);
       setTopItemIndex(viewableItems[0].key);
-      // topItemIndex.value = viewableItems[0].key
+      monthNamesRef.current.scrollToIndex({
+        index:viewableItems[0].key,
+        animated:true,
+        viewPosition:0.5
+      })
     }
-    // if (debounceTimeout) {
-    //   clearTimeout(debounceTimeout);
-    // }
-
-    // debounceTimeout = setTimeout(() => {
-    //   // Perform state update or any other action here
-    //   if (viewableItems.length > 0) {
-    //     console.log('Hello', viewableItems[0]);
-    //     setTopItemIndex(viewableItems[0].key);
-    //   }
-    //   console.log('Debounced state update');
-    // }, DEBOUNCE_DELAY);
   };
 
   const viewabilityConfigCallbackPairs = React.useRef([
@@ -96,30 +86,19 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     },
   ]);
 
-  const onEndReached = ()=>{
+  const onEndReached = () => {
     setLoader(true);
-          setTimeout(() => {
-            setNumberOfMonths((prevMonths: any) => {
-              // for (let i = 0; i < 12; i++) {
-              //   prevMonths.push(
-              //     prevMonths.length > 0
-              //       // ? prevMonths[prevMonths?.length - 1] + 1
-              //       ? (prevMonths?.length - 1) + 1 + i
-              //       : 0
-              //   );
-              // }
-              // console.log('PRE', prevMonths);
-              let arr = [...prevMonths]
-              for (let i = 0; i < 12; i++) {
-                arr.push((prevMonths?.length - 1) + 1 + i)
-              }
-              console.log('PRE', arr);
-
-              return arr;
-            });
-            setLoader(false);
-          }, 1000);
-  }
+    setTimeout(() => {
+      setNumberOfMonths((prevMonths: any) => {
+        let arr = [...prevMonths];
+        for (let i = 0; i < 12; i++) {
+          arr.push(prevMonths?.length - 1 + 1 + i);
+        }
+        return arr;
+      });
+      setLoader(false);
+    }, 1000);
+  };
 
   let renderItems = useMemo(() => {
     return (item: any) => (
@@ -130,6 +109,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         navigation={navigation}
         setScrollEnabled={setScrollEnabled}
         setDynamicViewHeight={setDynamicViewHeight}
+        scrollViewRef={scrollViewRef}
       />
     );
   }, [topItemIndex]);
@@ -137,24 +117,38 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   let CalendarComponentJSX = useMemo(() => {
     return (
       <VirtualizedList
-        // snapToInterval={200}
-        // data={numberOfMonths}
         style={{ flexGrow: 1 }}
-        
         initialNumToRender={12}
         contentContainerStyle={{ marginBottom: 60 }}
         getItemCount={(_data: unknown) => numberOfMonths.length}
-        getItem={(item: any,index:any) => numberOfMonths}
-        keyExtractor={(item: any, index: any) => index}
+        getItem={() => numberOfMonths}
+        keyExtractor={(_: any, index: any) => index}
         scrollEventThrottle={16}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-        // scrollEnabled={scrollEnabled}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
         renderItem={renderItems}
+        ref={scrollViewRef}
       />
     );
-  }, [numberOfMonths,topItemIndex]);
+  }, [numberOfMonths, topItemIndex]);
+
+
+  let renderMonthNames = useMemo(() => {
+    return (item: any) => (
+      <View style={styles.monthNamesItems} >
+        <Text style={{...styles.monthNamesItemsText,
+          color:topItemIndex === item.index ? 'black' : 'lightgrey',
+          fontWeight:topItemIndex === item.index ? 'bold' : 'normal',
+          fontSize:topItemIndex === item.index ? 18 : 14,
+          
+        }} >
+          {moment().clone().add(item.index,'month').format('MMMM').toUpperCase().substring(0,3)},
+          {" "+moment().clone().add(item.index,'month').format('YYYY')}
+        </Text>
+      </View>
+    );
+  }, [topItemIndex]);
 
   return (
     <GestureHandlerRootView
@@ -165,7 +159,22 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
           <Text style={styles.header}>{startMonth.format('MMMM YYYY')}</Text>
         </View> */}
       <>
-       {loader && <ActivityIndicator size={'large'} />}
+        {loader && <ActivityIndicator size={'large'} />}
+
+        <View style={{height:120}} >
+        <VirtualizedList
+           getItemCount={(_data: unknown) => numberOfMonths.length}
+           getItem={() => numberOfMonths}
+           keyExtractor={(_: any, index: any) => index}
+           renderItem={renderMonthNames}
+           contentContainerStyle={{flexGrow:1,alignItems:'center'}}
+           ref={monthNamesRef}
+           scrollEnabled={false}
+           disableIntervalMomentum={false}
+           disableScrollViewPanResponder={false}
+           
+        />
+        </View>
         <View style={styles.dayContainer}>
           {daysOfTheWeek.map((item, index) => (
             <Text style={styles.dayText} key={index}>
@@ -226,7 +235,6 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
           renderItem={renderItems}
         /> */}
         {CalendarComponentJSX}
-       
       </>
     </GestureHandlerRootView>
   );
@@ -273,6 +281,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '100%',
   },
+  monthNamesItems:{
+    // backgroundColor:'red',
+    padding:8,
+  },
+  monthNamesItemsText:{
+    fontSize:14,
+  }
 });
 
 export default CalendarMonth;

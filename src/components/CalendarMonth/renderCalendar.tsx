@@ -21,7 +21,8 @@ type RenderCalendarTypes = {
   setViewHeight?: any;
   navigation?: any;
   setScrollEnabled?:any,
-  setDynamicViewHeight:any
+  setDynamicViewHeight:any,
+  scrollViewRef?:any
 };
 
 const RenderCalendar = ({
@@ -30,7 +31,8 @@ const RenderCalendar = ({
   setViewHeight,
   navigation,
   setScrollEnabled,
-  setDynamicViewHeight
+  setDynamicViewHeight,
+  scrollViewRef
 }: RenderCalendarTypes): JSX.Element => {
   // console.log("num",num)
   const currentDate1 = moment().clone().add(num, 'month');
@@ -214,6 +216,7 @@ const RenderCalendar = ({
     <>
       <PinchGestureHandler
         ref={pinchRef}
+        waitFor={()=>!scrollViewRef.current.isScrolling}
         onGestureEvent={opacity && pinchGestureHandler}
         onHandlerStateChange={
           opacity
