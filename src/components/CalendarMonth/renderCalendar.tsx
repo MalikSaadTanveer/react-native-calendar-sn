@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import moment, { Moment } from 'moment';
 import Animated, {
@@ -20,9 +20,10 @@ type RenderCalendarTypes = {
   opacity?: boolean;
   setViewHeight?: any;
   navigation?: any;
-  setScrollEnabled?:any,
-  setDynamicViewHeight:any,
-  scrollViewRef?:any
+  setScrollEnabled?: any;
+  setDynamicViewHeight: any;
+  scrollViewRef?: any;
+  monthAPIData?: any;
 };
 
 const RenderCalendar = ({
@@ -32,30 +33,90 @@ const RenderCalendar = ({
   navigation,
   setScrollEnabled,
   setDynamicViewHeight,
-  scrollViewRef
+  scrollViewRef,
+  monthAPIData,
 }: RenderCalendarTypes): JSX.Element => {
-  // console.log("num",num)
+  
   const currentDate1 = moment().clone().add(num, 'month');
   // useState<Moment>(moment().clone().add(num,'month'));
   const monthStart: Moment = currentDate1.clone().startOf('month');
   const monthEnd: Moment = currentDate1.clone().endOf('month');
   const startDate: Moment = monthStart.clone().startOf('week');
   const endDate: Moment = monthEnd.clone().endOf('week');
+  const dynamicViewRef: any = useRef(null);
 
-  const dynamicViewRef:any = useRef(null);
- 
-  
+  const [matchingSlots, setMatchingSlots] = useState([]);
+  const timeSlots: any = [];
+
   const viewRef = useRef(null);
-  useEffect(() => {
-    if (viewRef.current) {
-      if (opacity === true) {
-        // viewRef?.current?.measure((x, y, width, height) => {
-        //   console.log(height)
-        //   setViewHeight(height);
-        // });
-      }
+  useEffect(() => {}, []);
+
+
+  let renderSlotsStripes = (timeSlotsArray: any) => {
+    const matchingSlots: any = [];
+    let currentTime = moment('00:00', 'HH:mm');
+    const endTime = moment('23:00', 'HH:mm');
+
+    while (currentTime.isSameOrBefore(endTime)) {
+      // const slotStartTime = currentTime.format('HH:mm');
+      // const slotEndTime = currentTime.add(1, 'hours').format('HH:mm');
+      const slotStartTime = moment.parseZone(currentTime, 'HH:mm');
+      const slotEndTime = moment.parseZone(
+        currentTime.add(1, 'hours'),
+        'HH:mm'
+      );
+
+      timeSlots.push({ start: slotStartTime, end: slotEndTime });
     }
-  }, [opacity]);
+    const slotStartTime = moment.parseZone('23:00', 'HH:mm');
+    const slotEndTime = moment.parseZone('00:00', 'HH:mm').add(1, 'day');
+
+    timeSlots.push({ start: slotStartTime, end: slotEndTime });
+
+    for (let i = 0; i < timeSlotsArray.length; i++) {
+      const inputStartTime = moment.parseZone(
+        timeSlotsArray[i].startSlot,
+        'HH:mm'
+      );
+      const inputEndTime = moment
+        .parseZone(timeSlotsArray[i].endSlot, 'HH:mm')
+        .isSameOrBefore(moment.parseZone(timeSlotsArray[i].startSlot, 'HH:mm'))
+        ? moment.parseZone(timeSlotsArray[i].endSlot, 'HH:mm').add(1, 'day')
+        : moment.parseZone(timeSlotsArray[i].endSlot, 'HH:mm');
+      
+      
+      timeSlots.forEach((slot: any, index: number) => {
+        if (
+          (inputStartTime.isSameOrBefore(slot.start) &&
+            inputEndTime.isSameOrAfter(slot.end)) ||
+          inputStartTime.isBetween(slot.start, slot.end, null, '[)') ||
+          inputEndTime.isBetween(slot.start, slot.end, null, '()')
+        ) {
+          matchingSlots.push(index);
+        }
+      });
+    }
+
+    return (
+      <>
+        <View style={styles.slotsStripsContainer}>
+          {Array.from({ length: 24 }, (_, index) => index).map(
+            (item, index) => (
+              <View
+                key={index}
+                style={{
+                  ...styles.singleStip,
+                  backgroundColor: matchingSlots.includes(item)
+                    ? 'rgba(0, 0, 0, 0.1)'
+                    : 'transparent',
+                }}
+              />
+            )
+          )}
+        </View>
+      </>
+    );
+  };
 
   let scale = useSharedValue(1);
   let baseScale = useSharedValue(1);
@@ -94,10 +155,10 @@ const RenderCalendar = ({
   // const handleZoomEnd = () => {
   //   console.warn(" I am zoomed in")
   // };
-  
+
   const handleZoomIn = () => {
-    console.log('I am going to calendarWeek');
-    const actualData = moment().clone().add(num,'month');
+    
+    const actualData = moment().clone().add(num, 'month');
     const data = {
       year:
         actualData.format('YYYY-MM') == moment(new Date()).format('YYYY-MM')
@@ -112,13 +173,12 @@ const RenderCalendar = ({
           ? parseInt(moment(new Date()).format('DD'))
           : 1,
     };
-    console.log("data",data);
+    
     navigation.navigate(navigationString.CalendarWeek, {
-      calendar: data
+      calendar: data,
     });
     scale.value = 1;
-    // console.log(currentDate.add(-1,'month').format('YYYY-MM'))
-    // console.log(moment(new Date()).format('YYYY-MM'))
+
   };
   const handleZoomOut = () => {};
 
@@ -150,13 +210,17 @@ const RenderCalendar = ({
             <View style={styles.dateContainer}></View>
           </View>
         );
-        currentDate = currentDate.add(1, 'day');
       } else {
+        let timeSlotsfromAPIData = monthAPIData.filter(
+          (item: any) => item.date == currentDate.format('YYYY-MM-DD')
+        );
         week.push(
           <View
             style={styles.row}
             key={`${currentDate.format('YYYY-MM-DD')}-week-${i}`}
           >
+            {timeSlotsfromAPIData.length > 0 &&
+              renderSlotsStripes(timeSlotsfromAPIData[0]?.timeSlots)}
             <View
               style={{
                 ...styles.dateContainer,
@@ -164,13 +228,11 @@ const RenderCalendar = ({
               }}
             >
               <Text style={styles.dateText}>{currentDate.format('D')}</Text>
-              {/* <Text style={styles.dateText}>{moment(new Date()).format('YYYY-MM-DD')}</Text> */}
-              {/* <View style={styles.dateTextBottom} /> */}
             </View>
           </View>
         );
-        currentDate = currentDate.add(1, 'day');
       }
+      currentDate = currentDate.add(1, 'day');
     }
 
     calendar.push(
@@ -216,19 +278,18 @@ const RenderCalendar = ({
     <>
       <PinchGestureHandler
         ref={pinchRef}
-        waitFor={()=>!scrollViewRef.current.isScrolling}
+        waitFor={() => !scrollViewRef.current.isScrolling}
         onGestureEvent={opacity && pinchGestureHandler}
         onHandlerStateChange={
           opacity
             ? ({ nativeEvent }) => {
-                if(nativeEvent.state === State.BEGAN){
-                 
+                if (nativeEvent.state === State.BEGAN) {
+                  // handleZoomIn();
                 }
                 if (nativeEvent.state === State.END) {
                   if (scale.value < 1) {
                     console.warn('go back');
                     return;
-                   
                   }
                   handleZoomIn();
                 }
@@ -238,8 +299,7 @@ const RenderCalendar = ({
       >
         <Animated.View ref={viewRef}>
           <Animated.View
-           ref={dynamicViewRef}
-       
+            ref={dynamicViewRef}
             style={[
               styles.calendarContainer,
               opacity && animatedStyle,
@@ -271,6 +331,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    marginVertical: 2,
+    position: 'relative',
   },
   header: {
     marginBottom: 10,
@@ -278,17 +340,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
   },
+
   dateContainer: {
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 6,
-    marginVertical: 4,
+    // marginVertical: 4,
     width: 34,
-    position: 'relative',
   },
   dateText: {
     fontSize: 16,
     color: 'black',
+  },
+  slotsStripsContainer: {
+    // backgroundColor: 'red',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+  },
+  singleStip: {
+    height: '4.17%',
+    // marginVertical:-1,
+    // marginVertical: '1%',
+    // backgroundColor:'blue'
   },
   // dateTextBottom: {
   //   height: 16,

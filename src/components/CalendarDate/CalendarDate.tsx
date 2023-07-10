@@ -23,7 +23,7 @@ import Animated, {
 import { colors } from '../../utils/colors';
 import moment from 'moment';
 // const { width, height } = Dimensions.get('window');
-import plusImage from '../../assets/plus.png';
+// import plusImage from '../../assets/plus.png';
 import { navigationString } from '../../utils/navigationString';
 import DateMeetingCard from './DateMeetingCard';
 
@@ -286,7 +286,7 @@ const CalendarWeek = ({ navigation }: any) => {
                           onPress={() => navigation.navigate('Dummy')}
                         >
                           <Image
-                            source={plusImage}
+                            source={require('../../assets/icons/plus.png')}
                             style={{ width: 12, height: 12 }}
                           />
                         </TouchableOpacity>

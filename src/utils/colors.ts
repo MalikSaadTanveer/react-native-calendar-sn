@@ -9,5 +9,6 @@ export const colors = {
     buttonClick:'rgba(64, 186, 142,0.8)',
     buttonClickHeader:'rgba(17, 107, 76,0.8)',
     buttonClickWhite:'rgba(64, 186, 142,0.1)',
+    weekSlotsColor:'rgba(229, 229, 229, 1)',
     cyanColor:'#26B8E9'
 }

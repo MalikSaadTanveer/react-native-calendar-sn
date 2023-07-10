@@ -64,15 +64,87 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     }
   };
 
+  const monthAPIData = [
+    {
+      date: '2023-07-06',
+      timeSlots: [
+        {
+          startSlot: '23:00',
+          endSlot: '23:49',
+        },
+        {
+          startSlot: '12:30',
+          endSlot: '12:31',
+        },
+        {
+          startSlot: '20:30',
+          endSlot: '22:30',
+        },
+      ],
+    },
+    {
+      date: '2023-07-08',
+      timeSlots: [
+        {
+          startSlot: '00:00',
+          endSlot: '10:00',
+        },
+        {
+          startSlot: '22:00',
+          endSlot: '23:30',
+        },
+      ],
+    },
+    {
+      date: '2023-07-20',
+      timeSlots: [
+        {
+          startSlot: '16:00',
+          endSlot: '20:30',
+        },
+        {
+          startSlot: '12:30',
+          endSlot: '15:30',
+        },
+      ],
+    },
+    {
+      date: '2023-08-05',
+      timeSlots: [
+        {
+          startSlot: '16:00',
+          endSlot: '20:30',
+        },
+        {
+          startSlot: '12:30',
+          endSlot: '15:30',
+        },
+      ],
+    },
+    {
+      date: '2023-08-08',
+      timeSlots: [
+        {
+          startSlot: '00:00',
+          endSlot: '02:30',
+        },
+        {
+          startSlot: '12:30',
+          endSlot: '15:30',
+        },
+      ],
+    },
+  ];
+
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
-    if (viewableItems.length > 0 ) {
+    if (viewableItems.length > 0) {
       console.log('Hello', viewableItems[0]);
       setTopItemIndex(viewableItems[0].key);
       monthNamesRef.current.scrollToIndex({
-        index:viewableItems[0].key,
-        animated:true,
-        viewPosition:0.5
-      })
+        index: viewableItems[0].key,
+        animated: true,
+        viewPosition: 0.5,
+      });
     }
   };
 
@@ -110,6 +182,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         setScrollEnabled={setScrollEnabled}
         setDynamicViewHeight={setDynamicViewHeight}
         scrollViewRef={scrollViewRef}
+        monthAPIData={monthAPIData}
       />
     );
   }, [topItemIndex]);
@@ -129,22 +202,29 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         onEndReachedThreshold={0.5}
         renderItem={renderItems}
         ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
       />
     );
   }, [numberOfMonths, topItemIndex]);
 
-
   let renderMonthNames = useMemo(() => {
     return (item: any) => (
-      <View style={styles.monthNamesItems} >
-        <Text style={{...styles.monthNamesItemsText,
-          color:topItemIndex === item.index ? 'black' : 'lightgrey',
-          fontWeight:topItemIndex === item.index ? 'bold' : 'normal',
-          fontSize:topItemIndex === item.index ? 18 : 14,
-          
-        }} >
-          {moment().clone().add(item.index,'month').format('MMMM').toUpperCase().substring(0,3)},
-          {" "+moment().clone().add(item.index,'month').format('YYYY')}
+      <View style={styles.monthNamesItems}>
+        <Text
+          style={{
+            ...styles.monthNamesItemsText,
+            color: topItemIndex === item.index ? 'black' : 'lightgrey',
+            fontWeight: topItemIndex === item.index ? 'bold' : 'normal',
+            fontSize: topItemIndex === item.index ? 18 : 14,
+          }}
+        >
+          {moment()
+            .clone()
+            .add(item.index, 'month')
+            .format('MMMM')
+            .toUpperCase()
+            .substring(0, 3)}
+          ,{' ' + moment().clone().add(item.index, 'month').format('YYYY')}
         </Text>
       </View>
     );
@@ -161,19 +241,18 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
       <>
         {loader && <ActivityIndicator size={'large'} />}
 
-        <View style={{height:120}} >
-        <VirtualizedList
-           getItemCount={(_data: unknown) => numberOfMonths.length}
-           getItem={() => numberOfMonths}
-           keyExtractor={(_: any, index: any) => index}
-           renderItem={renderMonthNames}
-           contentContainerStyle={{flexGrow:1,alignItems:'center'}}
-           ref={monthNamesRef}
-           scrollEnabled={false}
-           disableIntervalMomentum={false}
-           disableScrollViewPanResponder={false}
-           
-        />
+        <View style={{ height: 120 }}>
+          <VirtualizedList
+            getItemCount={(_data: unknown) => numberOfMonths.length}
+            getItem={() => numberOfMonths}
+            keyExtractor={(_: any, index: any) => index}
+            renderItem={renderMonthNames}
+            contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+            ref={monthNamesRef}
+            scrollEnabled={false}
+            disableIntervalMomentum={false}
+            disableScrollViewPanResponder={false}
+          />
         </View>
         <View style={styles.dayContainer}>
           {daysOfTheWeek.map((item, index) => (
@@ -281,13 +360,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '100%',
   },
-  monthNamesItems:{
+  monthNamesItems: {
     // backgroundColor:'red',
-    padding:8,
+    padding: 8,
   },
-  monthNamesItemsText:{
-    fontSize:14,
-  }
+  monthNamesItemsText: {
+    fontSize: 14,
+  },
 });
 
 export default CalendarMonth;

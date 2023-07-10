@@ -1,21 +1,19 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, } from 'react';
 import { LogBox, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CalendarMonth from '../components/CalendarMonth/CalendarMonth';
 // import CalendarWeek from '../components/CalendarWeek/CalendarWeek';
-import CalendarWeek from '../components/CalendarWeek/CalendarWeek2';
+// import CalendarWeek from '../components/CalendarWeek/CalendarWeek2';
+import CalendarWeek from '../components/CalendarWeek/CalendarWeek3';
 
 import CalendarDate from '../components/CalendarDate/CalendarDate';
 import { navigationString } from '../utils/navigationString';
-// import { createSharedElementStackNavigator,SharedElement } from 'react-navigation-shared-element';
-// createSharedElementStackNavigator
 import Dummy from '../Dummy';
 const Stack = createNativeStackNavigator();
-// const Stack = createSharedElementStackNavigator();
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const CalendarWeekComponent = React.lazy(() => import('../components/CalendarWeek/CalendarWeek2'));
+
 
 function CalendarNavigation() {
   useEffect(() => {
@@ -65,12 +63,7 @@ function CalendarNavigation() {
           <Stack.Screen name={navigationString.CalendarWeek}
            component={CalendarWeek}
           />
-            {/* {() => {
-              <Suspense fallback={<ActivityIndicator />}>
-                <CalendarWeekComponent />
-              </Suspense>;
-            }} */}
-          {/* </Stack.Screen> */}
+
           <Stack.Screen
             name={navigationString.CalendarDate}
             component={CalendarDate}

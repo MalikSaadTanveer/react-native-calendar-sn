@@ -7,12 +7,11 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useRef, useState, } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
   GestureHandlerRootView,
-  
 } from 'react-native-gesture-handler';
 
 import Animated, {
@@ -25,11 +24,25 @@ import { colors } from '../../utils/colors';
 import moment from 'moment';
 import { TouchableOpacity } from 'react-native';
 // const { width, height } = Dimensions.get('window');
-import plusImage from '../../assets/plus.png';
+
 // import { useRoute } from '@react-navigation/native';
 import { navigationString } from '../../utils/navigationString';
 // import { SharedElement } from 'react-navigation-shared-element'
 import { startOfMonth, endOfMonth, eachDayOfInterval, format } from 'date-fns';
+import { Calendar, } from 'react-native-big-calendar';
+
+const events = [
+  {
+    title: 'Meeting     ',
+    start: new Date(2023, 7,   7, 10, 0),
+    end: new Date(2023, 7, 7, 11, 30),
+  },
+  {
+    title: 'Coffee break',
+    start: new Date(2020, 1, 11, 15, 45),
+    end: new Date(2020, 1, 11, 16, 30),
+  },
+];
 
 const screenWidth = Dimensions.get('window').width;
 const CalendarWeek = ({ navigation, route }: any) => {
@@ -41,7 +54,7 @@ const CalendarWeek = ({ navigation, route }: any) => {
   const [weeks, setWeeks] = useState<any>([]);
   const [slotHighlight, setSlotHightlight] = useState('');
   const [loader, setLoader] = useState(true);
-  const scrollViewRef = useRef(null)
+  const scrollViewRef = useRef(null);
   const timeSlots = [
     {
       time: '1 AM',
@@ -198,11 +211,14 @@ const CalendarWeek = ({ navigation, route }: any) => {
   };
 
   const monthSetup2 = () => {
-
-    const startDate = new Date(calendar.year, calendar.month - 1, calendar.date);
+    const startDate = new Date(
+      calendar.year,
+      calendar.month - 1,
+      calendar.date
+    );
     const endDate = endOfMonth(startDate);
     const weekArr = [];
-    
+
     let currentDate = startDate;
     while (currentDate <= endDate) {
       const week = [
@@ -214,28 +230,38 @@ const CalendarWeek = ({ navigation, route }: any) => {
           // timeSlots: timeSlots,
         },
       ];
-    
-      const daysOfWeek = eachDayOfInterval({ start: currentDate, end: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 6) });
+
+      const daysOfWeek = eachDayOfInterval({
+        start: currentDate,
+        end: new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() + 6
+        ),
+      });
       daysOfWeek.forEach((day) => {
         const dayOfWeek = format(day, 'EEEE').substring(0, 3);
         const dayOfMonth = format(day, 'dd');
-    
+
         week.push({
           day: dayOfWeek,
           date: dayOfMonth,
           // timeSlots: timeSlots,
         });
-    
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1); // Move to the next day
+
+        currentDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() + 1
+        ); // Move to the next day
       });
-    
+
       weekArr.push(week);
     }
-    
+
     setLoader(false);
-    console.log("I am full weekArr",weekArr)
+    console.log('I am full weekArr', weekArr);
     setWeeks(weekArr);
-    
   };
   // const monthSetup = () => {
   //   const date = moment([calendar.year, calendar.month - 1, calendar.date]);
@@ -292,7 +318,8 @@ const CalendarWeek = ({ navigation, route }: any) => {
         // { translateY: focalY.value },
         // { translateX: -width / 2 },
         // { translateY: -height / 2 },
-        { scaleY: scale.value > 1 ? scale.value : 1 },
+        // { scaleY: scale.value > 1 ? scale.value : 1 },
+        { scale: scale.value > 1 ? scale.value : 1 },
         // { translateX: -focalX.value },
         // { translateY: -focalY.value },
         // { translateX: width / 2 },
@@ -324,7 +351,6 @@ const CalendarWeek = ({ navigation, route }: any) => {
   };
 
   return (
-    // <GestureHandlerRootView style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}>
     <>
       {loader ? (
         <View
@@ -333,17 +359,14 @@ const CalendarWeek = ({ navigation, route }: any) => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <PinchGestureHandler onGestureEvent={pinchHandler}
-         
-        >
-          <ScrollView
+        <PinchGestureHandler onGestureEvent={pinchHandler}>
+          <Animated.ScrollView
             horizontal
             contentContainerStyle={{ flexGrow: 1 }}
             snapToInterval={screenWidth}
             decelerationRate={0.2}
             showsHorizontalScrollIndicator={false}
-            pagingEnabled 
-            
+            pagingEnabled
           >
             {weeks?.map((fullWeek: any, fullWeekindex: any) => (
               <Animated.View key={fullWeekindex} style={[styles.container]}>
@@ -400,7 +423,7 @@ const CalendarWeek = ({ navigation, route }: any) => {
                               }
                             >
                               <Image
-                                source={plusImage}
+                                source={require('../../assets/icons/plus.png')}
                                 style={{ width: 12, height: 12 }}
                               />
                             </TouchableOpacity>
@@ -412,14 +435,11 @@ const CalendarWeek = ({ navigation, route }: any) => {
                 </Animated.ScrollView>
               </Animated.View>
             ))}
-          </ScrollView>
+          </Animated.ScrollView>
         </PinchGestureHandler>
       )}
     </>
-    // <View>
-    //   <Text>Hello</Text>
-    // </View>
-    // </GestureHandlerRootView>
+    // <Calendar events={events} height={600} mode={'week'} />
   );
 };
 
