@@ -6,26 +6,26 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  ScrollView,
+  // ScrollView,
   VirtualizedList,
-  FlatList,
+  // FlatList,
 } from 'react-native';
-import { SharedValue, useSharedValue } from 'react-native-reanimated';
+// import { SharedValue, useSharedValue } from 'react-native-reanimated';
 import RenderCalendar from './renderCalendar';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import { SharedElement } from 'react-navigation-shared-element';
 
 import { colors } from '../../utils/colors';
 
 const CalendarMonth: React.FC = ({ navigation }: any) => {
-  const [scrollEnabled, setScrollEnabled] = useState(true);
+  // const [scrollEnabled, setScrollEnabled] = useState<any>(true);
   // const topItemIndex = useSharedValue(0)
-  const [startMonth, setStartMonth] = useState<Moment>(
-    moment().clone().add(0, 'month')
-  );
+  // const [startMonth, setStartMonth] = useState<Moment>(
+  //   moment().clone().add(0, 'month')
+  // );
   const [topItemIndex, setTopItemIndex] = useState(0);
-  const [dynamicViewHeight, setDynamicViewHeight] = useState(200);
+  // const [dynamicViewHeight, setDynamicViewHeight] = useState(200);
   const [numberOfMonths, setNumberOfMonths] = useState(
     Array.from(Array(12).keys())
   );
@@ -34,35 +34,35 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   const monthNamesRef: any = useRef(null);
   var daysOfTheWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
-  const handleScroll = (event: any): void => {
-    const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+  // const handleScroll = (event: any): void => {
+  //   const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
 
-    const isAtBottom =
-      parseInt(layoutMeasurement.height + contentOffset.y) + 100 >=
-      parseInt(contentSize.height);
+  //   const isAtBottom =
+  //     parseInt(layoutMeasurement.height + contentOffset.y) + 100 >=
+  //     parseInt(contentSize.height);
 
-    const offsetY = event.nativeEvent.contentOffset.y;
-    const itemHeight = 190;
-    // const itemHeight = viewHeight;
-    const newTopItemIndex = Math.floor(offsetY / itemHeight);
-    if (newTopItemIndex !== topItemIndex) setTopItemIndex(newTopItemIndex);
+  //   const offsetY = event.nativeEvent.contentOffset.y;
+  //   const itemHeight = 190;
+  //   // const itemHeight = viewHeight;
+  //   const newTopItemIndex = Math.floor(offsetY / itemHeight);
+  //   if (newTopItemIndex !== topItemIndex) setTopItemIndex(newTopItemIndex);
 
-    if (isAtBottom && loader == false) {
-      setLoader(true);
-      setTimeout(() => {
-        setNumberOfMonths((prevMonths: any) => {
-          for (let i = 0; i < 12; i++) {
-            prevMonths.push(
-              prevMonths.length > 0 ? prevMonths[prevMonths?.length - 1] + 1 : 0
-              // prevMonths.length > 0 ? i + 1 + prevMonths.length : 0
-            );
-          }
-          return prevMonths;
-        });
-        setLoader(false);
-      }, 1000);
-    }
-  };
+  //   if (isAtBottom && loader == false) {
+  //     setLoader(true);
+  //     setTimeout(() => {
+  //       setNumberOfMonths((prevMonths: any) => {
+  //         for (let i = 0; i < 12; i++) {
+  //           prevMonths.push(
+  //             prevMonths.length > 0 ? prevMonths[prevMonths?.length - 1] + 1 : 0
+  //             // prevMonths.length > 0 ? i + 1 + prevMonths.length : 0
+  //           );
+  //         }
+  //         return prevMonths;
+  //       });
+  //       setLoader(false);
+  //     }, 1000);
+  //   }
+  // };
 
   const monthAPIData = [
     {
@@ -179,8 +179,6 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         num={item.index}
         key={item.index}
         navigation={navigation}
-        setScrollEnabled={setScrollEnabled}
-        setDynamicViewHeight={setDynamicViewHeight}
         scrollViewRef={scrollViewRef}
         monthAPIData={monthAPIData}
       />

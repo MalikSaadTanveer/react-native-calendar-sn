@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import { TextStyle, ViewStyle, View } from 'react-native';
 
 import { MIN_HEIGHT } from '../commonStyles';
-import {
+import type {
   CalendarCellStyle,
   CalendarCellTextStyle,
   DateRangeHandler,
@@ -35,7 +35,6 @@ import { AuthContext } from '../../utils/context';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
-  GestureHandlerRootView,
   State,
 } from 'react-native-gesture-handler';
 
@@ -168,8 +167,10 @@ function _CalendarContainer<T extends ICalendarEventBase>({
 }: CalendarContainerProps<T>) {
   const [targetDate, setTargetDate] = React.useState(dayjs(date));
   const { mode: reMode, setMode }: any = useContext(AuthContext);
-  const [animation, setAnimation] = useState('rubberBand');
+  // const [animation, setAnimation] = useState('rubberBand');
   const scale = useSharedValue(1);
+  const viewRef = useRef<any>(null);
+
   const navigation = useNavigation();
   const pinchHandler =
     useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
@@ -276,21 +277,15 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         (direction === 'LEFT' && !theme.isRTL) ||
         (direction === 'RIGHT' && theme.isRTL)
       ) {
-        console.log('Left')
-        setAnimation('slideInRight')
+        console.log('Left');
+        if (viewRef.current) viewRef?.current?.animate('slideInRight');
         nextTargetDate = targetDate.add(modeToNum(mode, targetDate), 'day');
-        setTimeout(()=>{
-          setAnimation('')
-        },100)
       } else {
         if (mode === 'month') {
           nextTargetDate = targetDate.add(targetDate.date() * -1, 'day');
         } else {
-          console.log('Right')
-          setAnimation('slideInLeft')
-          setTimeout(()=>{
-            setAnimation('')
-          },100)
+          console.log('Right');
+          if (viewRef.current) viewRef?.current?.animate('slideInLeft');
           nextTargetDate = targetDate.add(
             modeToNum(mode, targetDate) * -1,
             'day'
@@ -306,7 +301,15 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         ]);
       }
     },
-    [swipeEnabled, targetDate, mode, theme.isRTL, getDateRange, onChangeDate,animation]
+    [
+      swipeEnabled,
+      targetDate,
+      mode,
+      theme.isRTL,
+      getDateRange,
+      onChangeDate,
+      // animation,
+    ]
   );
 
   const commonProps = {
@@ -379,7 +382,7 @@ function _CalendarContainer<T extends ICalendarEventBase>({
           <HeaderComponent {...headerProps} />
         </View>
 
-        <Animatable.View animation={animation} duration={300}>
+        <Animatable.View duration={500} ref={viewRef}>
           <PinchGestureHandler
             onGestureEvent={pinchHandler}
             onHandlerStateChange={onHandlerStateChange}

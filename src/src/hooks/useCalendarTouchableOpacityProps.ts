@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { ViewStyle } from 'react-native'
+import type{ ViewStyle } from 'react-native'
 
 import { eventCellCss } from '../commonStyles'
-import { CalendarTouchableOpacityProps, EventCellStyle, ICalendarEventBase } from '../interfaces'
+import type { CalendarTouchableOpacityProps, EventCellStyle, ICalendarEventBase } from '../interfaces'
 
 interface UseCalendarTouchableOpacityPropsProps<T extends ICalendarEventBase> {
   event: T

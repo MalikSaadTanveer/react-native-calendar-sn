@@ -14,7 +14,7 @@ const ZoomAndDragScreen = () => {
     useNativeDriver: true,
   });
 
-  const onPinchHandlerStateChange = (event) => {
+  const onPinchHandlerStateChange = (event:any) => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       setBaseScale(baseScale * event.nativeEvent.scale);
       scale.setValue(1);
@@ -33,7 +33,7 @@ const ZoomAndDragScreen = () => {
     { useNativeDriver: true }
   );
 
-  const onPanHandlerStateChange = (event) => {
+  const onPanHandlerStateChange = (event:any) => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       setBaseTranslateX(baseTranslateX + event.nativeEvent.translationX);
       setBaseTranslateY(baseTranslateY + event.nativeEvent.translationY);
@@ -47,6 +47,7 @@ const ZoomAndDragScreen = () => {
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gestureState) => {
         if (baseScale > 1) {
+          event;
           translateX.setValue(gestureState.dx);
           translateY.setValue(gestureState.dy);
         }

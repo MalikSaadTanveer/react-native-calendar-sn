@@ -6,7 +6,7 @@ import { Platform, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { u } from '../commonStyles'
 import { useNow } from '../hooks/useNow'
 import { usePanResponder } from '../hooks/usePanResponder'
-import {
+import type {
   CalendarCellStyle,
   CalendarCellTextStyle,
   EventCellStyle,
@@ -130,7 +130,7 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
       onLayout={({ nativeEvent: { layout } }) => setCalendarWidth(layout.width)}
       {...panResponder.panHandlers}
     >
-      {weeks.map((week, i) => (
+      {weeks.map((week:any, i:any) => (
         <View
           key={i}
           style={[
@@ -143,10 +143,10 @@ function _CalendarBodyForMonthView<T extends ICalendarEventBase>({
           ]}
         >
           {week
-            .map((d) =>
+            .map((d:any) =>
               showAdjacentMonths ? targetDate.date(d) : d > 0 ? targetDate.date(d) : null,
             )
-            .map((date, ii) => (
+            .map((date:any, ii:any) => (
               <TouchableOpacity
                 onPress={() => date && onPressCell && onPressCell(date.toDate())}
                 style={[

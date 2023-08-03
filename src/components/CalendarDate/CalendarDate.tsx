@@ -1,8 +1,6 @@
 import {
   StyleSheet,
   Text,
-  View,
-  Dimensions,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -24,14 +22,14 @@ import { colors } from '../../utils/colors';
 import moment from 'moment';
 // const { width, height } = Dimensions.get('window');
 // import plusImage from '../../assets/plus.png';
-import { navigationString } from '../../utils/navigationString';
+// import { navigationString } from '../../utils/navigationString';
 import DateMeetingCard from './DateMeetingCard';
 
 const CalendarWeek = ({ navigation }: any) => {
   const scale = useSharedValue(1);
   const focalX = useSharedValue(0);
   const focalY = useSharedValue(0);
-  const [weeks, setWeeks] = useState([]);
+  const [weeks, setWeeks] = useState<any>([]);
   const [slotHighlight, setSlotHightlight] = useState('');
 
   useEffect(() => {

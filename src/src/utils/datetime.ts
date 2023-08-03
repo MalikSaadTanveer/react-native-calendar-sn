@@ -2,8 +2,8 @@ import calendarize, { Week } from 'calendarize'
 import dayjs from 'dayjs'
 
 import { OVERLAP_PADDING } from '../commonStyles'
-import { ICalendarEventBase, Mode, WeekNum } from '../interfaces'
-import { Palette } from '../theme/ThemeInterface'
+import type{ ICalendarEventBase, Mode, WeekNum } from '../interfaces'
+// import type { Palette } from '../theme/ThemeInterface'
 import { colors } from '../../utils/colors'
 
 export const DAY_MINUTES = 1440
@@ -155,13 +155,13 @@ export function getOrderOfEvent(event: ICalendarEventBase, eventList: ICalendarE
 export function getStyleForOverlappingEvent(
   eventPosition: number,
   overlapOffset: number,
-  palettes: Palette[],
+  // palettes: Palette[],
 ) {
   let overlapStyle = {}
   const offset = overlapOffset
   const start = eventPosition * offset
   const zIndex = 100 + eventPosition
-  const bgColors = palettes.map((p) => p.main)
+  // const bgColors = palettes.map((p) => p.main)
   overlapStyle = {
     start: start + OVERLAP_PADDING,
     end: OVERLAP_PADDING,
@@ -253,13 +253,13 @@ export function getEventSpanningInfo(
 }
 
 export function getWeeksWithAdjacentMonths(targetDate: dayjs.Dayjs, weekStartsOn: WeekNum) {
-  let weeks = calendarize(targetDate.toDate(), weekStartsOn)
-  const firstDayIndex = weeks[0].findIndex((d) => d === 1)
+  let weeks:any = calendarize(targetDate.toDate(), weekStartsOn)
+  const firstDayIndex = weeks[0].findIndex((d:any) => d === 1)
   const lastDay = targetDate.endOf('month').date()
-  const lastDayIndex = weeks[weeks.length - 1].findIndex((d) => d === lastDay)
+  const lastDayIndex = weeks[weeks.length - 1].findIndex((d:any) => d === lastDay)
 
-  weeks = weeks.map((week, iw) => {
-    return week.map((d, id) => {
+  weeks = weeks.map((week:any, iw:any) => {
+    return week.map((d:any, id:any) => {
       if (d !== 0) {
         return d
       } else if (iw === 0) {

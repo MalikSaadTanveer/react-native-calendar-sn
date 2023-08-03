@@ -5,7 +5,7 @@ import { Platform, ScrollView, StyleSheet, TextStyle, View, ViewStyle } from 're
 import { u } from '../commonStyles'
 import { useNow } from '../hooks/useNow'
 import { usePanResponder } from '../hooks/usePanResponder'
-import {
+import type{
   CalendarCellStyle,
   EventCellStyle,
   EventRenderer,

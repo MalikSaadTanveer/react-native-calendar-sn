@@ -4,13 +4,13 @@ import {
   View,
   Dimensions,
   Image,
-  ScrollView,
+  // ScrollView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
-  GestureHandlerRootView,
+  // GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 
 import Animated, {
@@ -23,7 +23,6 @@ import { colors } from '../../utils/colors';
 import moment from 'moment';
 import { TouchableOpacity } from 'react-native';
 // const { width, height } = Dimensions.get('window');
-import plusImage from '../../assets/plus.png';
 // import { useRoute } from '@react-navigation/native';
 import { navigationString } from '../../utils/navigationString';
 // import { SharedElement } from 'react-navigation-shared-element'
@@ -43,28 +42,28 @@ const CalendarWeek = ({ navigation, route }: any) => {
     monthSetup();
   }, []);
 
-  const weeksSetup = () => {
-    const date = moment([calendar.year, calendar.month - 1, calendar.date]);
-    // const startOfWeek = date.clone().startOf('isoWeek');
-    const startOfWeek = date.clone().startOf('week');
-    // const endOfWeek = date.clone().endOf('isoWeek');
-    const endOfWeek = date.clone().endOf('week');
-    let weekArr: any = [{ day: null, date: null }];
-    for (
-      let day = startOfWeek.clone();
-      day.isSameOrBefore(endOfWeek);
-      day.add(1, 'day')
-    ) {
-      const dayOfWeek = day.format('dddd').substring(0, 3);
-      const dayOfMonth = day.format('DD');
-      weekArr.push({
-        day: dayOfWeek,
-        date: dayOfMonth,
-      });
-    }
+  // const weeksSetup = () => {
+  //   const date = moment([calendar.year, calendar.month - 1, calendar.date]);
+  //   // const startOfWeek = date.clone().startOf('isoWeek');
+  //   const startOfWeek = date.clone().startOf('week');
+  //   // const endOfWeek = date.clone().endOf('isoWeek');
+  //   const endOfWeek = date.clone().endOf('week');
+  //   let weekArr: any = [{ day: null, date: null }];
+  //   for (
+  //     let day = startOfWeek.clone();
+  //     day.isSameOrBefore(endOfWeek);
+  //     day.add(1, 'day')
+  //   ) {
+  //     const dayOfWeek = day.format('dddd').substring(0, 3);
+  //     const dayOfMonth = day.format('DD');
+  //     weekArr.push({
+  //       day: dayOfWeek,
+  //       date: dayOfMonth,
+  //     });
+  //   }
 
-    // setWeeks((pre): any => [...pre, ...weekArr]);
-  };
+  //   // setWeeks((pre): any => [...pre, ...weekArr]);
+  // };
 
   const monthSetup = () => {
     const date = moment([calendar.year, calendar.month - 1, calendar.date]);
@@ -325,7 +324,7 @@ const CalendarWeek = ({ navigation, route }: any) => {
                         }
                       >
                         <Image
-                          source={plusImage}
+                          source={require('../../assets/icons/plus.png')}
                           style={{ width: 12, height: 12 }}
                         />
                       </TouchableOpacity>

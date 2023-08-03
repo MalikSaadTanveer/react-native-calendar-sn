@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Text, View, ViewStyle } from 'react-native'
 
 import { u } from '../commonStyles'
-import { WeekNum } from '../interfaces'
+import type { WeekNum } from '../interfaces'
 import { useTheme } from '../theme/ThemeContext'
 import { getDatesInWeek } from '../utils/datetime'
 import { typedMemo } from '../utils/react'

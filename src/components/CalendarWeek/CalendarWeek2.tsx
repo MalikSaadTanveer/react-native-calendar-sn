@@ -4,14 +4,14 @@ import {
   View,
   Dimensions,
   Image,
-  ScrollView,
+  // ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
-  GestureHandlerRootView,
+  // GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 
 import Animated, {
@@ -21,28 +21,28 @@ import Animated, {
   // withTiming,
 } from 'react-native-reanimated';
 import { colors } from '../../utils/colors';
-import moment from 'moment';
+// import moment from 'moment';
 import { TouchableOpacity } from 'react-native';
 // const { width, height } = Dimensions.get('window');
 
 // import { useRoute } from '@react-navigation/native';
 import { navigationString } from '../../utils/navigationString';
 // import { SharedElement } from 'react-navigation-shared-element'
-import { startOfMonth, endOfMonth, eachDayOfInterval, format } from 'date-fns';
-import { Calendar, } from 'react-native-big-calendar';
+import {  endOfMonth, eachDayOfInterval, format } from 'date-fns';
+// import { Calendar, } from 'react-native-big-calendar';
 
-const events = [
-  {
-    title: 'Meeting     ',
-    start: new Date(2023, 7,   7, 10, 0),
-    end: new Date(2023, 7, 7, 11, 30),
-  },
-  {
-    title: 'Coffee break',
-    start: new Date(2020, 1, 11, 15, 45),
-    end: new Date(2020, 1, 11, 16, 30),
-  },
-];
+// const events = [
+//   {
+//     title: 'Meeting     ',
+//     start: new Date(2023, 7,   7, 10, 0),
+//     end: new Date(2023, 7, 7, 11, 30),
+//   },
+//   {
+//     title: 'Coffee break',
+//     start: new Date(2020, 1, 11, 15, 45),
+//     end: new Date(2020, 1, 11, 16, 30),
+//   },
+// ];
 
 const screenWidth = Dimensions.get('window').width;
 const CalendarWeek = ({ navigation, route }: any) => {
@@ -54,7 +54,7 @@ const CalendarWeek = ({ navigation, route }: any) => {
   const [weeks, setWeeks] = useState<any>([]);
   const [slotHighlight, setSlotHightlight] = useState('');
   const [loader, setLoader] = useState(true);
-  const scrollViewRef = useRef(null);
+  // const scrollViewRef = useRef(null);
   const timeSlots = [
     {
       time: '1 AM',
@@ -187,28 +187,28 @@ const CalendarWeek = ({ navigation, route }: any) => {
     }, 100);
   }, []);
 
-  const weeksSetup = () => {
-    const date = moment([calendar.year, calendar.month - 1, calendar.date]);
-    // const startOfWeek = date.clone().startOf('isoWeek');
-    const startOfWeek = date.clone().startOf('week');
-    // const endOfWeek = date.clone().endOf('isoWeek');
-    const endOfWeek = date.clone().endOf('week');
-    let weekArr: any = [{ day: null, date: null }];
-    for (
-      let day = startOfWeek.clone();
-      day.isSameOrBefore(endOfWeek);
-      day.add(1, 'day')
-    ) {
-      const dayOfWeek = day.format('dddd').substring(0, 3);
-      const dayOfMonth = day.format('DD');
-      weekArr.push({
-        day: dayOfWeek,
-        date: dayOfMonth,
-      });
-    }
+  // const weeksSetup = () => {
+  //   const date = moment([calendar.year, calendar.month - 1, calendar.date]);
+  //   // const startOfWeek = date.clone().startOf('isoWeek');
+  //   const startOfWeek = date.clone().startOf('week');
+  //   // const endOfWeek = date.clone().endOf('isoWeek');
+  //   const endOfWeek = date.clone().endOf('week');
+  //   let weekArr: any = [{ day: null, date: null }];
+  //   for (
+  //     let day = startOfWeek.clone();
+  //     day.isSameOrBefore(endOfWeek);
+  //     day.add(1, 'day')
+  //   ) {
+  //     const dayOfWeek = day.format('dddd').substring(0, 3);
+  //     const dayOfMonth = day.format('DD');
+  //     weekArr.push({
+  //       day: dayOfWeek,
+  //       date: dayOfMonth,
+  //     });
+  //   }
 
-    // setWeeks((pre): any => [...pre, ...weekArr]);
-  };
+  //   // setWeeks((pre): any => [...pre, ...weekArr]);
+  // };
 
   const monthSetup2 = () => {
     const startDate = new Date(
@@ -221,7 +221,7 @@ const CalendarWeek = ({ navigation, route }: any) => {
 
     let currentDate = startDate;
     while (currentDate <= endDate) {
-      const week = [
+      const week:any = [
         {
           day: null,
           date: null,

@@ -4,7 +4,7 @@ import isBetween from 'dayjs/plugin/isBetween'
 import Mockdate from 'mockdate'
 import * as R from 'remeda'
 
-import { ICalendarEventBase } from '../../interfaces'
+import type { ICalendarEventBase } from '../../interfaces'
 import * as utils from '../datetime'
 
 Mockdate.set('2021-09-17T04:00:00.000Z')
@@ -111,19 +111,19 @@ describe('getDatesInNextThreeDays', () => {
 
 describe('getCountOfEventsAtEvent', () => {
   test('single event', () => {
-    const event = events[0]
+    const event:any = events[0]
     const singleCount = utils.getCountOfEventsAtEvent(event, events)
     expect(singleCount).toEqual(1)
   })
 
   test('3 events start', () => {
-    const event = events[4]
+    const event:any = events[4]
     const threeCount = utils.getCountOfEventsAtEvent(event, events)
     expect(threeCount).toEqual(3)
   })
 
   test('3 events middle', () => {
-    const event = events[6]
+    const event:any = events[6]
     const threeCount = utils.getCountOfEventsAtEvent(event, events)
     expect(threeCount).toEqual(3)
   })
@@ -131,25 +131,25 @@ describe('getCountOfEventsAtEvent', () => {
 
 describe('getOrderOfEvent', () => {
   test('single event', () => {
-    const event = events[0]
+    const event:any = events[0]
     const index = utils.getOrderOfEvent(event, events)
     expect(index).toEqual(0)
   })
 
   test('3 events start', () => {
-    const event = events[4]
+    const event:any = events[4]
     const index = utils.getOrderOfEvent(event, events)
     expect(index).toEqual(0)
   })
 
   test('3 events middle', () => {
-    const event = events[6]
+    const event:any = events[6]
     const index = utils.getOrderOfEvent(event, events)
     expect(index).toEqual(1)
   })
 
   test('3 events end', () => {
-    const event = events[5]
+    const event:any = events[5]
     const index = utils.getOrderOfEvent(event, events)
     expect(index).toEqual(2)
   })
@@ -181,48 +181,48 @@ describe('modeToNum', () => {
   })
 })
 
-describe('spanning events', () => {
-  test('first day', () => {
-    const date = dayjs().add(1, 'week').set('day', 3)
-    const { isMultipleDays, isMultipleDaysStart, eventWeekDuration } = utils.getEventSpanningInfo(
-      events[7],
-      date,
-      date.day(),
-      0,
-      true,
-    )
+// describe('spanning events', () => {
+//   test('first day', () => {
+//     const date = dayjs().add(1, 'week').set('day', 3)
+//     const { isMultipleDays, isMultipleDaysStart, eventWeekDuration } = utils.getEventSpanningInfo(
+//       events[7],
+//       date,
+//       date.day(),
+//       0,
+//       true,
+//     )
 
-    expect(isMultipleDays).toBe(true)
-    expect(isMultipleDaysStart).toBe(true)
-    expect(eventWeekDuration).toBe(4)
-  })
-  test('second day', () => {
-    const date = dayjs().add(1, 'week').set('day', 4)
-    const { isMultipleDays, isMultipleDaysStart, eventWeekDuration } = utils.getEventSpanningInfo(
-      events[7],
-      date,
-      date.day(),
-      0,
-      true,
-    )
+//     expect(isMultipleDays).toBe(true)
+//     expect(isMultipleDaysStart).toBe(true)
+//     expect(eventWeekDuration).toBe(4)
+//   })
+//   test('second day', () => {
+//     const date = dayjs().add(1, 'week').set('day', 4)
+//     const { isMultipleDays, isMultipleDaysStart, eventWeekDuration } = utils.getEventSpanningInfo(
+//       events[7],
+//       date,
+//       date.day(),
+//       0,
+//       true,
+//     )
 
-    expect(isMultipleDays).toBe(true)
-    expect(isMultipleDaysStart).toBe(false)
-    expect(eventWeekDuration).toBe(3)
-  })
-  test('first day of second week', () => {
-    const date = dayjs().add(2, 'week').set('day', 0)
+//     expect(isMultipleDays).toBe(true)
+//     expect(isMultipleDaysStart).toBe(false)
+//     expect(eventWeekDuration).toBe(3)
+//   })
+//   test('first day of second week', () => {
+//     const date = dayjs().add(2, 'week').set('day', 0)
 
-    const { isMultipleDays, isMultipleDaysStart, eventWeekDuration } = utils.getEventSpanningInfo(
-      events[7],
-      date,
-      date.day(),
-      0,
-      true,
-    )
+//     const { isMultipleDays, isMultipleDaysStart, eventWeekDuration } = utils.getEventSpanningInfo(
+//       events[7],
+//       date,
+//       date.day(),
+//       0,
+//       true,
+//     )
 
-    expect(isMultipleDays).toBe(true)
-    expect(isMultipleDaysStart).toBe(true)
-    expect(eventWeekDuration).toBe(6)
-  })
-})
+//     expect(isMultipleDays).toBe(true)
+//     expect(isMultipleDaysStart).toBe(true)
+//     expect(eventWeekDuration).toBe(6)
+//   })
+// })

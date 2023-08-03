@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {  useRef, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import moment, { Moment } from 'moment';
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  // withTiming,
 } from 'react-native-reanimated';
 import {
   PinchGestureHandler,
@@ -21,7 +21,7 @@ type RenderCalendarTypes = {
   setViewHeight?: any;
   navigation?: any;
   setScrollEnabled?: any;
-  setDynamicViewHeight: any;
+
   scrollViewRef?: any;
   monthAPIData?: any;
 };
@@ -29,10 +29,10 @@ type RenderCalendarTypes = {
 const RenderCalendar = ({
   opacity,
   num,
-  setViewHeight,
+  // setViewHeight,
   navigation,
-  setScrollEnabled,
-  setDynamicViewHeight,
+  // setScrollEnabled,
+  // setDynamicViewHeight,
   scrollViewRef,
   monthAPIData,
 }: RenderCalendarTypes): JSX.Element => {
@@ -45,7 +45,7 @@ const RenderCalendar = ({
   const endDate: Moment = monthEnd.clone().endOf('week');
   const dynamicViewRef: any = useRef(null);
 
-  const [matchingSlots, setMatchingSlots] = useState([]);
+  // const [matchingSlots, setMatchingSlots] = useState([]);
   const timeSlots: any = [];
 
   const viewRef = useRef(null);
@@ -180,7 +180,7 @@ const RenderCalendar = ({
     scale.value = 1;
 
   };
-  const handleZoomOut = () => {};
+  // const handleZoomOut = () => {};
 
   const calendar: JSX.Element[] = [];
   let currentDate: Moment = startDate.clone();
@@ -274,12 +274,13 @@ const RenderCalendar = ({
   {
     /* <Text style={styles.header}>{currentDate1.format('MMMM YYYY')}</Text> */
   }
+  
   return (
     <>
       <PinchGestureHandler
         ref={pinchRef}
         waitFor={() => !scrollViewRef.current.isScrolling}
-        onGestureEvent={opacity && pinchGestureHandler}
+        onGestureEvent={opacity ? pinchGestureHandler : undefined}
         onHandlerStateChange={
           opacity
             ? ({ nativeEvent }) => {

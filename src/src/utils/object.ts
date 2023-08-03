@@ -1,6 +1,6 @@
-import { TextStyle, ViewStyle } from 'react-native'
+import type { TextStyle, ViewStyle } from 'react-native'
 
-import { DeepPartial } from './utility-types'
+import type { DeepPartial } from './utility-types'
 
 export function objHasContent(obj: ViewStyle | TextStyle): boolean {
   return !!Object.keys(obj).length
