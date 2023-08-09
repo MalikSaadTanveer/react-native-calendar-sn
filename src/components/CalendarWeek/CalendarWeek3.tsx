@@ -1,5 +1,5 @@
 import {   Dimensions } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Calendar } from '../../src/index';
 import moment from 'moment';
 // import {
@@ -8,7 +8,7 @@ import moment from 'moment';
 //   spanningEvents,
 // } from '../../stories/events';
 import { colors } from '../../utils/colors';
-import { AuthContext } from '../../utils/context';
+import { AuthContext, EventContext } from '../../utils/context';
 import dayjs from 'dayjs'
 
 
@@ -18,24 +18,26 @@ const CalendarWeek3 = ({route}:any) => {
   const { calendar } = route.params;
   const [mode, setMode]:any = useState('week');
   const [calendarDate, setCalendarDate]:any = useState(moment([calendar.year, calendar.month -1, calendar.date]))
+  const { myEvents }: any = useContext(EventContext);
 
 
   return (
     <AuthContext.Provider value={{mode, setMode}}>
       <Calendar
         // events={events}
-        events={[
-          {
-            title: 'Watch Boxing',
-            start: dayjs().set('hour', 2).set('minute', 0).set('second', 0).toDate(),
-            end: dayjs().set('hour', 4).set('minute', 30).toDate(),
-          },
-          {
-            title: 'Meeting',
-            start: dayjs().set('hour', 10).set('minute', 0).toDate(),
-            end: dayjs().set('hour', 11).set('minute', 30).toDate(),
-          },
-        ]}
+        // events={[
+        //   {
+        //     title: 'Watch Boxing',
+        //     start: dayjs().set('hour', 2).set('minute', 0).set('second', 0).toDate(),
+        //     end: dayjs().set('hour', 4).set('minute', 30).toDate(),
+        //   },
+        //   {
+        //     title: 'Meeting',
+        //     start: dayjs().set('hour', 10).set('minute', 0).toDate(),
+        //     end: dayjs().set('hour', 11).set('minute', 30).toDate(),
+        //   },
+        // ]}
+        events={myEvents}
         height={height}
         mode={mode}
         date={calendarDate}
