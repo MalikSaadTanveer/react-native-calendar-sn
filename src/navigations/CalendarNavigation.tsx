@@ -16,26 +16,27 @@ import { EventContext } from '../utils/context';
 import dayjs from 'dayjs';
 interface CalendarEventProps {
   events: any;
+  type?:any;
 }
 
-function CalendarNavigation({ events }: CalendarEventProps) {
-  const [myEvents, setMyEvents] = useState<any>( events ||
-    [{
-      title: 'Hello to everyone',
-      start: dayjs().add(1, 'day').set('hour', 2).set('minute', 45).toDate(),
-      end: dayjs().add(1, 'day').set('hour', 7).set('minute', 30).toDate(),
-    },]
-    );
+function CalendarNavigation({ events, type }: CalendarEventProps) {
+  // const [myEvents, setMyEvents] = useState<any>( events ||
+  //   [{
+  //     title: 'Hello to everyone',
+  //     start: dayjs().add(1, 'day').set('hour', 2).set('minute', 45).toDate(),
+  //     end: dayjs().add(1, 'day').set('hour', 7).set('minute', 30).toDate(),
+  //   },]
+  //   );
 
   useEffect(() => {
     LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
     LogBox.ignoreAllLogs();
-    setMyEvents(events ||
-      [{
-        title: 'Hello to everyone',
-        start: dayjs().add(1, 'day').set('hour', 2).set('minute', 45).toDate(),
-        end: dayjs().add(1, 'day').set('hour', 7).set('minute', 30).toDate(),
-      },])
+    // setMyEvents(events ||
+    //   [{
+    //     title: 'Hello to everyone',
+    //     start: dayjs().add(1, 'day').set('hour', 2).set('minute', 45).toDate(),
+    //     end: dayjs().add(1, 'day').set('hour', 7).set('minute', 30).toDate(),
+    //   },])
   }, []);
 
   // const opacityTransition: object = {
@@ -63,7 +64,7 @@ function CalendarNavigation({ events }: CalendarEventProps) {
   // };
 
   return (
-    <EventContext.Provider value={{ myEvents }}>
+    <EventContext.Provider value={{ myEvents:events, type }}>
       <GestureHandlerRootView
         style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
       >
