@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,  } from 'react';
 import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,13 +13,14 @@ import { navigationString } from '../utils/navigationString';
 const Stack = createNativeStackNavigator();
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { EventContext } from '../utils/context';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 interface CalendarEventProps {
   events: any;
   type?:any;
+  eventDate?:any
 }
 
-function CalendarNavigation({ events, type }: CalendarEventProps) {
+function CalendarNavigation({ events, type, eventDate }: CalendarEventProps) {
   // const [myEvents, setMyEvents] = useState<any>( events ||
   //   [{
   //     title: 'Hello to everyone',
@@ -74,6 +75,7 @@ function CalendarNavigation({ events, type }: CalendarEventProps) {
               headerShown: false,
               // ...opacityTransition,
             }}
+            initialRouteName={type ? navigationString.CalendarWeek : navigationString.CalendarMonth}
           >
             <Stack.Screen
               name={navigationString.CalendarMonth}
@@ -82,6 +84,14 @@ function CalendarNavigation({ events, type }: CalendarEventProps) {
             <Stack.Screen
               name={navigationString.CalendarWeek}
               component={CalendarWeek}
+              initialParams={{ eventInfo: eventDate ? {
+                year: eventDate.year,
+                month: eventDate.month,
+                date: eventDate.date
+              }
+              :
+              null
+            }}
             />
 
             <Stack.Screen

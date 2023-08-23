@@ -9,9 +9,12 @@ import { AuthContext, EventContext } from '../../utils/context';
 
 const height = Dimensions.get('window').height;
 const CalendarWeek3 = ({route}:any) => {
-  const { calendar } = route.params;
+  const { calendar, eventInfo } = route.params;
+
+  const _calendar = eventInfo || calendar
+
   const [mode, setMode]:any = useState('week');
-  const [calendarDate, setCalendarDate]:any = useState(moment([calendar.year, calendar.month -1, calendar.date]))
+  const [calendarDate, setCalendarDate]:any = useState(moment([_calendar.year, _calendar.month -1, _calendar.date]))
   const { myEvents,type }: any = useContext(EventContext);
 
 

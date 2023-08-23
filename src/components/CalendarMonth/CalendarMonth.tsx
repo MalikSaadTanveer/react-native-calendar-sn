@@ -138,7 +138,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
 
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
-      console.log('Hello', viewableItems[0]);
+      // console.log('Hello', viewableItems[0]);
       setTopItemIndex(viewableItems[0].key);
       monthNamesRef.current.scrollToIndex({
         index: viewableItems[0].key,
