@@ -17,10 +17,11 @@ import { EventContext } from '../utils/context';
 interface CalendarEventProps {
   events: any;
   type?:any;
-  eventDate?:any
+  eventDate?:any,
+  onEventPress?:any
 }
 
-function CalendarNavigation({ events, type, eventDate }: CalendarEventProps) {
+function CalendarNavigation({ events, type, eventDate, onEventPress }: CalendarEventProps) {
   // const [myEvents, setMyEvents] = useState<any>( events ||
   //   [{
   //     title: 'Hello to everyone',
@@ -65,7 +66,7 @@ function CalendarNavigation({ events, type, eventDate }: CalendarEventProps) {
   // };
 
   return (
-    <EventContext.Provider value={{ myEvents:events, type }}>
+    <EventContext.Provider value={{ myEvents:events, type, onEventPress }}>
       <GestureHandlerRootView
         style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
       >

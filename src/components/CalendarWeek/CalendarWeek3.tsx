@@ -15,7 +15,7 @@ const CalendarWeek3 = ({route}:any) => {
 
   const [mode, setMode]:any = useState('week');
   const [calendarDate, setCalendarDate]:any = useState(moment([_calendar.year, _calendar.month -1, _calendar.date]))
-  const { myEvents,type }: any = useContext(EventContext);
+  const { myEvents,type, onEventPress }: any = useContext(EventContext);
 
 
   return (
@@ -51,6 +51,7 @@ const CalendarWeek3 = ({route}:any) => {
         weekDayHeaderHighlightColor={colors.primary}
         onPressEvent={(event: any) => {
           console.log(event);
+          onEventPress(event)
         }}
         onPressCell={(date) => {
           // console.log(moment.parseZone(date, 'HH:mm'));
@@ -61,6 +62,7 @@ const CalendarWeek3 = ({route}:any) => {
           setCalendarDate(date)
           setMode('day')
         }}
+        
       />
     </AuthContext.Provider>
   );
