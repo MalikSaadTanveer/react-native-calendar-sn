@@ -4,10 +4,12 @@ export const defaultTheme: ThemeInterface = {
   isRTL: false,
   palette: {
     primary: {
-      main: 'rgb(66, 133, 244)',
-      contrastText: '#fff',
+      // main: 'rgb(66, 133, 244)',
+      main: '#D8D5FF',
+      contrastText: '#000',
     },
-    nowIndicator: 'red',
+    // nowIndicator: 'red',
+    nowIndicator: '#40BA8E',
     gray: {
       // 50: '#fafafa',
       100: '#f5f5f5',
@@ -23,9 +25,12 @@ export const defaultTheme: ThemeInterface = {
     moreLabel: '#000000',
   },
   eventCellOverlappings: [
-    { main: '#E26245', contrastText: '#fff' }, // orange
-    { main: '#4AC001', contrastText: '#fff' }, // green
-    { main: '#5934C7', contrastText: '#fff' }, // purple
+    // { main: '#E26245', contrastText: '#fff' }, // orange
+    // { main: '#4AC001', contrastText: '#fff' }, // green
+    // { main: '#5934C7', contrastText: '#fff' }, // purple
+    { main: '#FDEBD4', contrastText: '#000' }, // orange
+    { main: '#FFDEF8', contrastText: '#fff' }, // green
+    { main: '#C4EEFC', contrastText: '#fff' }, // purple
   ],
   typography: {
     xs: {

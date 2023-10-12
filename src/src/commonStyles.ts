@@ -93,6 +93,14 @@ export const u = StyleSheet.create({
     marginLeft: 3,
     marginRight: 3,
   },
+  'mx-4': {
+    marginLeft: 4,
+    marginRight: 4,
+  },
+  'mx-5': {
+    marginLeft: 5,
+    marginRight: 5,
+  },
   'p-2': {
     padding: 2,
   },

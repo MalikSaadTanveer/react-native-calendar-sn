@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useContext } from 'react';
 import {
   View,
   Text,
@@ -15,10 +15,11 @@ import RenderCalendar from './renderCalendar';
 import moment from 'moment';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import { SharedElement } from 'react-navigation-shared-element';
-
+import {  EventContext } from '../../utils/context';
 import { colors } from '../../utils/colors';
 
 const CalendarMonth: React.FC = ({ navigation }: any) => {
+  const { myEvents }: any = useContext(EventContext);
   // const [scrollEnabled, setScrollEnabled] = useState<any>(true);
   // const topItemIndex = useSharedValue(0)
   // const [startMonth, setStartMonth] = useState<Moment>(
@@ -64,77 +65,153 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   //   }
   // };
 
-  const monthAPIData = [
-    {
-      date: '2023-07-06',
-      timeSlots: [
-        {
-          startSlot: '23:00',
-          endSlot: '23:49',
-        },
-        {
-          startSlot: '12:30',
-          endSlot: '12:31',
-        },
-        {
-          startSlot: '20:30',
-          endSlot: '22:30',
-        },
-      ],
-    },
-    {
-      date: '2023-07-08',
-      timeSlots: [
-        {
-          startSlot: '00:00',
-          endSlot: '10:00',
-        },
-        {
-          startSlot: '22:00',
-          endSlot: '23:30',
-        },
-      ],
-    },
-    {
-      date: '2023-07-20',
-      timeSlots: [
-        {
-          startSlot: '16:00',
-          endSlot: '20:30',
-        },
-        {
-          startSlot: '12:30',
-          endSlot: '15:30',
-        },
-      ],
-    },
-    {
-      date: '2023-08-05',
-      timeSlots: [
-        {
-          startSlot: '16:00',
-          endSlot: '20:30',
-        },
-        {
-          startSlot: '12:30',
-          endSlot: '15:30',
-        },
-      ],
-    },
-    {
-      date: '2023-08-08',
-      timeSlots: [
-        {
-          startSlot: '00:00',
-          endSlot: '02:30',
-        },
-        {
-          startSlot: '12:30',
-          endSlot: '15:30',
-        },
-      ],
-    },
-  ];
+
+
+  // const monthAPIData = [
+  //   {
+  //     date: '2023-07-06',
+  //     timeSlots: [
+  //       {
+  //         startSlot: '23:00',
+  //         endSlot: '23:49',
+  //       },
+  //       {
+  //         startSlot: '12:30',
+  //         endSlot: '12:31',
+  //       },
+  //       {
+  //         startSlot: '20:30',
+  //         endSlot: '22:30',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     date: '2023-07-08',
+  //     timeSlots: [
+  //       {
+  //         startSlot: '00:00',
+  //         endSlot: '10:00',
+  //       },
+  //       {
+  //         startSlot: '22:00',
+  //         endSlot: '23:30',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     date: '2023-07-20',
+  //     timeSlots: [
+  //       {
+  //         startSlot: '16:00',
+  //         endSlot: '20:30',
+  //       },
+  //       {
+  //         startSlot: '12:30',
+  //         endSlot: '15:30',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     date: '2023-08-05',
+  //     timeSlots: [
+  //       {
+  //         startSlot: '16:00',
+  //         endSlot: '20:30',
+  //       },
+  //       {
+  //         startSlot: '12:30',
+  //         endSlot: '15:30',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     date: '2023-08-08',
+  //     timeSlots: [
+  //       {
+  //         startSlot: '00:00',
+  //         endSlot: '02:30',
+  //       },
+  //       {
+  //         startSlot: '12:30',
+  //         endSlot: '15:30',
+  //       },
+  //     ],
+  //   },
+  // ];
+
+  const monthAPIData = formatEventData(myEvents)
+
+  // console.log(monthAPIData?.map(item=>{
+  //   return item.timeSlots
+  // }))
+
+  // function formatEventData(originalData:any) {
+  //   const formattedData = [];
+  //   const dateMap = new Map();
+  
+  //   originalData.forEach((item:any) => {
+  //     const startDate = new Date(item.start);
+  //     const endDate = new Date(item.end);
+  
+  //     const date = startDate.toISOString().slice(0, 10);
+  //     const startSlot = startDate.toISOString().slice(11, 16);
+  //     const endSlot = endDate.toISOString().slice(11, 16);
+  
+  //     if (dateMap.has(date)) {
+  //       dateMap.get(date).timeSlots.push({ startSlot, endSlot });
+  //     } else {
+  //       dateMap.set(date, { date, timeSlots: [{ startSlot, endSlot }] });
+  //     }
+  //   });
+  
+  //   formattedData.push(...dateMap.values());
+  
+  //   return formattedData;
+  // }
+
+  
+  
+  // const formattedData = formatEventData(myEvents);
+  // console.log("I am",formattedData);
+  
+  function formatEventData(originalData:any) {
+    const formattedData = [];
+    const dateMap = new Map();
+  
+    originalData.forEach((item:any) => {
+      const startDate = new Date(item.start);
+      const endDate = new Date(item.end);
+  
+      const date = startDate.toISOString().slice(0, 10);
+      const startSlot = startDate.toISOString().slice(11, 16);
+      const endSlot = endDate.toISOString().slice(11, 16);
+  
+      if (dateMap.has(date)) {
+        dateMap.get(date).timeSlots.push({ startSlot, endSlot });
+      } else {
+        dateMap.set(date, { date, timeSlots: [{ startSlot, endSlot }] });
+      }
+    });
+  
+    formattedData.push(...dateMap.values());
+  
+    return formattedData.map(item => {
+      item.timeSlots = item.timeSlots.map((slot:any) => {
+        const startHours = slot.startSlot.split(':')[0];
+        const startMinutes = slot.startSlot.split(':')[1];
+        const endHours = slot.endSlot.split(':')[0];
+        const endMinutes = slot.endSlot.split(':')[1];
+  
+        return {
+          startSlot: `${startHours}:${startMinutes}`,
+          endSlot: `${endHours}:${endMinutes}`,
+        };
+      });
+  
+      return item;
+    });
+  }
+
 
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
     if (viewableItems.length > 0) {

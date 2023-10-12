@@ -4,7 +4,7 @@ import * as React from 'react'
 import { OVERLAP_OFFSET, u } from '../commonStyles'
 import { useCalendarTouchableOpacityProps } from '../hooks/useCalendarTouchableOpacityProps'
 import type{ EventCellStyle, EventRenderer, ICalendarEventBase } from '../interfaces'
-// import { useTheme } from '../theme/ThemeContext'
+import { useTheme } from '../theme/ThemeContext'
 import { DAY_MINUTES, getRelativeTopInDay, getStyleForOverlappingEvent } from '../utils/datetime'
 import { typedMemo } from '../utils/react'
 import { DefaultCalendarEventRenderer } from './DefaultCalendarEventRenderer'
@@ -35,18 +35,18 @@ function _CalendarEvent<T extends ICalendarEventBase>({
   onPressEvent,
   eventCellStyle,
   showTime,
-  // eventCount = 1,
+  eventCount = 1,
   eventOrder = 0,
   overlapOffset = OVERLAP_OFFSET,
   renderEvent,
   ampm,
 }: CalendarEventProps<T>) {
-  // const theme = useTheme()
+  const theme = useTheme()
 
-  // const palettes = React.useMemo(
-  //   () => [theme.palette.primary, ...theme.eventCellOverlappings],
-  //   [theme],
-  // )
+  const palettes = React.useMemo(
+    () => [theme.palette.primary, ...theme.eventCellOverlappings],
+    [theme],
+  )
 
   const touchableOpacityProps = useCalendarTouchableOpacityProps({
     event,
@@ -55,7 +55,7 @@ function _CalendarEvent<T extends ICalendarEventBase>({
     injectedStyles: [
       getEventCellPositionStyle(event.start, event.end),
       getStyleForOverlappingEvent(eventOrder, overlapOffset 
-        // ,palettes
+        ,palettes
         ),
       u['absolute'],
       u['mt-2'],
@@ -65,6 +65,7 @@ function _CalendarEvent<T extends ICalendarEventBase>({
 
   // const textColor = React.useMemo(() => {
   //   const fgColors = palettes.map((p) => p.contrastText)
+  //   console.log("fgColors",fgColors)
   //   return fgColors[eventCount % fgColors.length] || fgColors[0]
   // }, [eventCount, palettes])
 
@@ -78,7 +79,7 @@ function _CalendarEvent<T extends ICalendarEventBase>({
       showTime={showTime}
       ampm={ampm}
       touchableOpacityProps={touchableOpacityProps}
-      // textColor={textColor}
+      // textColor={textColor }
       textColor={'black'}
     />
   )

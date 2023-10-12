@@ -33,6 +33,7 @@ export function DefaultCalendarEventRenderer<T extends ICalendarEventBase>({
           <Text style={eventTimeStyle}>
             {dayjs(event.start).format(ampm ? 'hh:mm a' : 'HH:mm')}
           </Text>
+       
         </Text>
       ) : (
         <>
@@ -42,6 +43,7 @@ export function DefaultCalendarEventRenderer<T extends ICalendarEventBase>({
               {formatStartEnd(event.start, event.end, ampm ? 'h:mm a' : 'HH:mm')}
             </Text>
           )}
+          
           {event.children && event.children}
         </>
       )}

@@ -50,8 +50,10 @@ const CalendarWeek3 = ({route}:any) => {
         }}
         weekDayHeaderHighlightColor={colors.primary}
         onPressEvent={(event: any) => {
-          console.log(event);
-          onEventPress(event)
+          console.log("I am event",event);
+          
+          if(onEventPress) onEventPress(event)
+        
         }}
         onPressCell={(date) => {
           // console.log(moment.parseZone(date, 'HH:mm'));

@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 
 import { OVERLAP_PADDING } from '../commonStyles'
 import type{ ICalendarEventBase, Mode, WeekNum } from '../interfaces'
-// import type { Palette } from '../theme/ThemeInterface'
+import type { Palette } from '../theme/ThemeInterface'
 import { colors } from '../../utils/colors'
 
 export const DAY_MINUTES = 1440
@@ -155,18 +155,18 @@ export function getOrderOfEvent(event: ICalendarEventBase, eventList: ICalendarE
 export function getStyleForOverlappingEvent(
   eventPosition: number,
   overlapOffset: number,
-  // palettes: Palette[],
+  palettes: Palette[],
 ) {
   let overlapStyle = {}
   const offset = overlapOffset
   const start = eventPosition * offset
   const zIndex = 100 + eventPosition
-  // const bgColors = palettes.map((p) => p.main)
+  const bgColors = palettes.map((p) => p.main)
   overlapStyle = {
-    start: start + OVERLAP_PADDING,
-    end: OVERLAP_PADDING,
-    // backgroundColor: bgColors[eventPosition % bgColors.length] || bgColors[0],
-    backgroundColor: colors.weekSlotsColor,
+    start:  start + OVERLAP_PADDING  ,
+    end: OVERLAP_PADDING  ,
+    backgroundColor: bgColors[eventPosition % bgColors.length] || bgColors[0],
+    // backgroundColor: colors.weekSlotsColor,
     zIndex,
   }
   return overlapStyle

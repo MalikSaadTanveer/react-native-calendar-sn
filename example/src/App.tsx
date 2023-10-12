@@ -1,19 +1,26 @@
 import * as React from 'react';
-import {Text} from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import RootStackScreen from './RootStack';
-import { CalendarMonth } from 'react-native-calendar-sn';
 
+import { CalendarMonth } from 'react-native-calendar-sn';
+import dayjs from 'dayjs';
 
 export default function App() {
   return (
 
-    <NavigationContainer independent={true}>
-      <RootStackScreen/>
-    </NavigationContainer>
-      // <CalendarMonth  events={[]}  // type="day"  eventDate={{ year:2023, month:9, date:23, }}
-      // />
-    
+
+      <CalendarMonth  events={ [
+        {
+        title: 'Hello to everyone',
+        start: dayjs().add(0, 'day').set('hour', 2).set('minute', 0).toDate(),
+        end: dayjs().add(0, 'day').set('hour', 7).set('minute', 30).toDate(),
+      },
+        {
+        title: 'Hello to everyone',
+        start: dayjs().add(0, 'day').set('hour', 5).set('minute', 0).toDate(),
+        end: dayjs().add(0, 'day').set('hour', 10).set('minute', 30).toDate(),
+      },
+  
+    ]}  // type="day"  eventDate={{ year:2023, month:9, date:23, }}
+      />
+     
   );
 }
