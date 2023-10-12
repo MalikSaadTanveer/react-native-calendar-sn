@@ -35,7 +35,7 @@ function _CalendarEvent<T extends ICalendarEventBase>({
   onPressEvent,
   eventCellStyle,
   showTime,
-  eventCount = 1,
+  // eventCount = 1,
   eventOrder = 0,
   overlapOffset = OVERLAP_OFFSET,
   renderEvent,

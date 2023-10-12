@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { OVERLAP_PADDING } from '../commonStyles'
 import type{ ICalendarEventBase, Mode, WeekNum } from '../interfaces'
 import type { Palette } from '../theme/ThemeInterface'
-import { colors } from '../../utils/colors'
+// import { colors } from '../../utils/colors'
 
 export const DAY_MINUTES = 1440
 
