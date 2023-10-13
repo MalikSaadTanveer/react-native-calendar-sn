@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { CalendarMonth } from 'react-native-calendar-sn';
-import dayjs from 'dayjs';
+
 
 export default function App() {
   return (
