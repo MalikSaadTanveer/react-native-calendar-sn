@@ -91,53 +91,49 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     const result: any = [];
 
     data?.forEach((item: any) => {
-      const startDate = dayjs(item.start).format("YYYY-MM-DD");
-      const endDate = dayjs(item.end).format("YYYY-MM-DD");
-      
+      const startDate = dayjs(item.start).format('YYYY-MM-DD');
+      const endDate = dayjs(item.end).format('YYYY-MM-DD');
+
       const date1 = dayjs(startDate);
       const date2 = dayjs(endDate);
       const diffInDays = date2.diff(date1, 'day');
-      
-        for (let i = 0; i <= diffInDays; i++) {
-          const currentDate = date1.add(i, 'day').format('YYYY-MM-DD');
-          const existingDate = result.find(
-            (el: any) => el.date === currentDate
-          );
 
-          if (existingDate) {
-            existingDate.timeSlots.push({
-              startSlot:
-                i == 0
-                  ? new Date(item.start).toTimeString().slice(0, 5)
-                  : '00:00',
-              endSlot:
-                i == diffInDays
-                  ? new Date(item.end).toTimeString().slice(0, 5)
-                  : '23:59',
-            });
-          } else {
-            result.push({
-              date: currentDate,
-              timeSlots: [
-                {
-                  startSlot:
-                    i == 0
-                      ? new Date(item.start).toTimeString().slice(0, 5)
-                      : '00:00',
-                  endSlot:
-                    i == diffInDays
-                      ? new Date(item.end).toTimeString().slice(0, 5)
-                      : '23:59',
-                },
-              ],
-            });
-          }
+      for (let i = 0; i <= diffInDays; i++) {
+        const currentDate = date1.add(i, 'day').format('YYYY-MM-DD');
+        const existingDate = result.find((el: any) => el.date === currentDate);
+
+        if (existingDate) {
+          existingDate.timeSlots.push({
+            startSlot:
+              i == 0
+                ? new Date(item.start).toTimeString().slice(0, 5)
+                : '00:00',
+            endSlot:
+              i == diffInDays
+                ? new Date(item.end).toTimeString().slice(0, 5)
+                : '23:59',
+          });
+        } else {
+          result.push({
+            date: currentDate,
+            timeSlots: [
+              {
+                startSlot:
+                  i == 0
+                    ? new Date(item.start).toTimeString().slice(0, 5)
+                    : '00:00',
+                endSlot:
+                  i == diffInDays
+                    ? new Date(item.end).toTimeString().slice(0, 5)
+                    : '23:59',
+              },
+            ],
+          });
         }
-    
+      }
     });
 
-    
-    return result
+    return result;
   }
 
   convertFormat1(myEvents);
@@ -189,7 +185,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         monthAPIData={monthAPIData}
       />
     );
-  }, [topItemIndex]);
+  }, [topItemIndex, myEvents]);
 
   let CalendarComponentJSX = useMemo(() => {
     return (
@@ -209,7 +205,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         showsVerticalScrollIndicator={false}
       />
     );
-  }, [numberOfMonths, topItemIndex]);
+  }, [numberOfMonths, topItemIndex, myEvents]);
 
   let renderMonthNames = useMemo(() => {
     return (item: any) => (
