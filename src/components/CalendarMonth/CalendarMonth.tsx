@@ -15,9 +15,9 @@ import RenderCalendar from './renderCalendar';
 import moment from 'moment';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import { SharedElement } from 'react-navigation-shared-element';
-import {  EventContext } from '../../utils/context';
+import { EventContext } from '../../utils/context';
 import { colors } from '../../utils/colors';
-
+import dayjs from 'dayjs';
 const CalendarMonth: React.FC = ({ navigation }: any) => {
   const { myEvents }: any = useContext(EventContext);
   // const [scrollEnabled, setScrollEnabled] = useState<any>(true);
@@ -65,11 +65,9 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   //   }
   // };
 
-
-
   // const monthAPIData = [
   //   {
-  //     date: '2023-07-06',
+  //     date: '2023-10-06',
   //     timeSlots: [
   //       {
   //         startSlot: '23:00',
@@ -85,133 +83,64 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   //       },
   //     ],
   //   },
-  //   {
-  //     date: '2023-07-08',
-  //     timeSlots: [
-  //       {
-  //         startSlot: '00:00',
-  //         endSlot: '10:00',
-  //       },
-  //       {
-  //         startSlot: '22:00',
-  //         endSlot: '23:30',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     date: '2023-07-20',
-  //     timeSlots: [
-  //       {
-  //         startSlot: '16:00',
-  //         endSlot: '20:30',
-  //       },
-  //       {
-  //         startSlot: '12:30',
-  //         endSlot: '15:30',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     date: '2023-08-05',
-  //     timeSlots: [
-  //       {
-  //         startSlot: '16:00',
-  //         endSlot: '20:30',
-  //       },
-  //       {
-  //         startSlot: '12:30',
-  //         endSlot: '15:30',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     date: '2023-08-08',
-  //     timeSlots: [
-  //       {
-  //         startSlot: '00:00',
-  //         endSlot: '02:30',
-  //       },
-  //       {
-  //         startSlot: '12:30',
-  //         endSlot: '15:30',
-  //       },
-  //     ],
-  //   },
   // ];
 
-  const monthAPIData = formatEventData(myEvents)
+  const monthAPIData = convertFormat1(myEvents);
 
-  // console.log(monthAPIData?.map(item=>{
-  //   return item.timeSlots
-  // }))
+  function convertFormat1(data: any) {
+    const result: any = [];
 
-  // function formatEventData(originalData:any) {
-  //   const formattedData = [];
-  //   const dateMap = new Map();
-  
-  //   originalData.forEach((item:any) => {
-  //     const startDate = new Date(item.start);
-  //     const endDate = new Date(item.end);
-  
-  //     const date = startDate.toISOString().slice(0, 10);
-  //     const startSlot = startDate.toISOString().slice(11, 16);
-  //     const endSlot = endDate.toISOString().slice(11, 16);
-  
-  //     if (dateMap.has(date)) {
-  //       dateMap.get(date).timeSlots.push({ startSlot, endSlot });
-  //     } else {
-  //       dateMap.set(date, { date, timeSlots: [{ startSlot, endSlot }] });
-  //     }
-  //   });
-  
-  //   formattedData.push(...dateMap.values());
-  
-  //   return formattedData;
-  // }
+    data?.forEach((item: any) => {
+      const startDate = dayjs(item.start).format("YYYY-MM-DD");
+      const endDate = dayjs(item.end).format("YYYY-MM-DD");
+      
+      const date1 = dayjs(startDate);
+      const date2 = dayjs(endDate);
+      const diffInDays = date2.diff(date1, 'day');
+      
+        for (let i = 0; i <= diffInDays; i++) {
+          const currentDate = date1.add(i, 'day').format('YYYY-MM-DD');
+          const existingDate = result.find(
+            (el: any) => el.date === currentDate
+          );
 
-  
-  
-  // const formattedData = formatEventData(myEvents);
-  // console.log("I am",formattedData);
-  
-  function formatEventData(originalData:any) {
-    const formattedData = [];
-    const dateMap = new Map();
-  
-    originalData.forEach((item:any) => {
-      const startDate = new Date(item.start);
-      const endDate = new Date(item.end);
-  
-      const date = startDate.toISOString().slice(0, 10);
-      const startSlot = startDate.toISOString().slice(11, 16);
-      const endSlot = endDate.toISOString().slice(11, 16);
-  
-      if (dateMap.has(date)) {
-        dateMap.get(date).timeSlots.push({ startSlot, endSlot });
-      } else {
-        dateMap.set(date, { date, timeSlots: [{ startSlot, endSlot }] });
-      }
+          if (existingDate) {
+            existingDate.timeSlots.push({
+              startSlot:
+                i == 0
+                  ? new Date(item.start).toTimeString().slice(0, 5)
+                  : '00:00',
+              endSlot:
+                i == diffInDays
+                  ? new Date(item.end).toTimeString().slice(0, 5)
+                  : '23:59',
+            });
+          } else {
+            result.push({
+              date: currentDate,
+              timeSlots: [
+                {
+                  startSlot:
+                    i == 0
+                      ? new Date(item.start).toTimeString().slice(0, 5)
+                      : '00:00',
+                  endSlot:
+                    i == diffInDays
+                      ? new Date(item.end).toTimeString().slice(0, 5)
+                      : '23:59',
+                },
+              ],
+            });
+          }
+        }
+    
     });
-  
-    formattedData.push(...dateMap.values());
-  
-    return formattedData.map(item => {
-      item.timeSlots = item.timeSlots.map((slot:any) => {
-        const startHours = slot.startSlot.split(':')[0];
-        const startMinutes = slot.startSlot.split(':')[1];
-        const endHours = slot.endSlot.split(':')[0];
-        const endMinutes = slot.endSlot.split(':')[1];
-  
-        return {
-          startSlot: `${startHours}:${startMinutes}`,
-          endSlot: `${endHours}:${endMinutes}`,
-        };
-      });
-  
-      return item;
-    });
+
+    
+    return result
   }
 
+  convertFormat1(myEvents);
 
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
     if (viewableItems.length > 0) {

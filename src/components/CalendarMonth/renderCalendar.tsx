@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   singleStip: {
-    height: '4.17%',
+    height: '4.30%',
     // marginVertical:-1,
     // marginVertical: '1%',
     // backgroundColor:'blue'
