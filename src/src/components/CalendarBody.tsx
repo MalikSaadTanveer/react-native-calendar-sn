@@ -156,7 +156,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
       <ScrollView
         style={[
           {
-            height: containerHeight - cellHeight * 3,
+            height: containerHeight - cellHeight * 4.7,
           },
           style,
         ]}
