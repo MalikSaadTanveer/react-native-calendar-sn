@@ -1,5 +1,5 @@
 import {   Dimensions } from 'react-native';
-import React, { useState,useContext } from 'react';
+import React, { useState,useContext, useEffect } from 'react';
 import { Calendar } from '../../src/index';
 import moment from 'moment';
 import { colors } from '../../utils/colors';
@@ -11,12 +11,24 @@ const height = Dimensions.get('window').height;
 const CalendarWeek3 = ({route}:any) => {
   const { calendar, eventInfo } = route.params;
 
-  const _calendar = eventInfo || calendar
-
+  
   const [mode, setMode]:any = useState('week');
+  const { myEvents,type, onEventPress, eventDate, setEventDate }: any = useContext(EventContext);
+  const _calendar = eventDate || eventInfo || calendar
   const [calendarDate, setCalendarDate]:any = useState(moment([_calendar.year, _calendar.month -1, _calendar.date]))
-  const { myEvents,type, onEventPress }: any = useContext(EventContext);
 
+  useEffect(()=>{
+    if(eventDate){
+      const _calendar = eventDate || eventInfo || calendar
+      setCalendarDate(moment([_calendar.year, _calendar.month -1, _calendar.date]))
+    }
+
+    return ()=>{
+      if(setEventDate){
+        setEventDate()
+      }
+    }
+  },[eventDate])
 
   return (
     <AuthContext.Provider value={{mode, setMode}}>
