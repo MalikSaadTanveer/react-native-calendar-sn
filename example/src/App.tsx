@@ -59,6 +59,19 @@ export default function App() {
           createdAt: "2023-10-11T10:23:07.929+00:00",
           updatedAt: "2023-10-11T10:23:07.929+00:00",
       },
+        {
+          _id: "6526778bdc9e2ed3f468613c",
+          title: "Level 2",
+          location: "Model town",
+          participants: [],
+          description: " ",
+          user_id: "65267702dc9e2ed3f4685a09",
+          start: new Date("2023-11-10T03:00:05.327+00:00".slice(0,19)),
+          end: new Date("2023-11-10T010:30:02.333+00:00".slice(0,19)),
+          status: "false",
+          createdAt: "2023-10-11T10:23:07.929+00:00",
+          updatedAt: "2023-10-11T10:23:07.929+00:00",
+      },
    
       ]} // type="day"  eventDate={{ year:2023, month:9, date:23, }}
     />

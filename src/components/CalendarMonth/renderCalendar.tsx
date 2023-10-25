@@ -327,7 +327,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   calendarContainer: {
-    // backgroundColor:'red',
   },
   row: {
     flexDirection: 'row',
@@ -346,7 +345,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 6,
-    // marginVertical: 4,
     width: 34,
   },
   dateText: {
@@ -354,7 +352,6 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   slotsStripsContainer: {
-    // backgroundColor: 'red',
     position: 'absolute',
     width: '100%',
     height: '100%',
@@ -362,18 +359,9 @@ const styles = StyleSheet.create({
   },
   singleStip: {
     height: '4.30%',
-    // marginVertical:-1,
-    // marginVertical: '1%',
-    // backgroundColor:'blue'
+   
   },
-  // dateTextBottom: {
-  //   height: 16,
-  //   width: 34,
-  //   backgroundColor: 'rgba(0, 0, 0, 0.1)',
-  //   borderRadius: 4,
-  //   position: 'absolute',
-  //   bottom: 0,
-  // },
+
 });
 
 export default RenderCalendar;
