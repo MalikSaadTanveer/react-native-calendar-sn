@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useContext,
   useEffect,
-  useCallback,
+
 } from 'react';
 import {
   View,
@@ -38,8 +38,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     Array.from(Array(12).keys())
   );
   const [loader, setLoader] = useState(false);
-  const [isCalendarListTouched, setIsCalendarListTouched]: any =
-    useState(false);
+  const [isCalendarListTouched, setIsCalendarListTouched]: any = useState(false);
   const [isMonthListTouched, setIsMonthListTouched]: any = useState(false);
 
   // const [monthAPIData, setMonthAPIData] = useState([]);
@@ -102,7 +101,9 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   //   setMonthAPIData(convertFormat1(myEvents));
   // }, []);
 
-  let monthAPIData = convertFormat1(myEvents);
+  const monthAPIData = useMemo(() => convertFormat1(myEvents), [myEvents]);
+  // let monthAPIData = convertFormat1(myEvents);
+
   function convertFormat1(data: any) {
     const result: any = [];
 
@@ -266,7 +267,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         monthAPIData={monthAPIData}
       />
     );
-  }, [topItemIndex, myEvents, isCalendarListTouched, isMonthListTouched]);
+  }, [topItemIndex, myEvents,]);
 
   let CalendarComponentJSX = useMemo(() => {
     return (
@@ -291,8 +292,6 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     numberOfMonths,
     topItemIndex,
     myEvents,
-    isCalendarListTouched,
-    isMonthListTouched,
   ]);
 
   let renderMonthNames = useMemo(() => {
@@ -316,7 +315,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         </Text>
       </View>
     );
-  }, [topItemIndex, isCalendarListTouched, isMonthListTouched]);
+  }, [topItemIndex,]);
   
   return (
     <GestureHandlerRootView
@@ -324,8 +323,8 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     >
       <>
         {loader && <ActivityIndicator size={'large'} />}
-        <Text>Calendar {new String(isCalendarListTouched)}</Text>
-        <Text>Month {new String(isMonthListTouched)}</Text>
+        {/* <Text>Calendar {new String(isCalendarListTouched)}</Text>
+        <Text>Month {new String(isMonthListTouched)}</Text> */}
         <View style={{ height: 120 }}>
           <VirtualizedList
             getItemCount={(_data: unknown) => numberOfMonths.length}

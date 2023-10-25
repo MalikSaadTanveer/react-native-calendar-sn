@@ -18,8 +18,8 @@ import { CalendarMonth } from 'react-native-calendar-sn';;
       events={[
         {
           title: "Level 1",
-          start: new Date("2023-10-10T10:00:05.327+00:00".slice(0,19)),
-          end: new Date("2023-10-10T12:00:05.327+00:00".slice(0,19)),
+          start: new Date("2023-10-10T10:00:05.327+00:00"),
+          end: new Date("2023-10-10T12:00:05.327+00:00"),
         },
    
       ]} // type="day"  eventDate={{ year:2023, month:9, date:23, }}
@@ -32,12 +32,12 @@ import { CalendarMonth } from 'react-native-calendar-sn';;
       events={[
         {
           title: "Level 1",
-          start: new Date("2023-10-10T10:00:05.327+00:00".slice(0,19)),
-          end: new Date("2023-10-10T12:00:05.327+00:00".slice(0,19)),
+          start: new Date("2023-10-10T10:00:05.327+00:00"),
+          end: new Date("2023-10-10T12:00:05.327+00:00"),
         },
    
       ]} 
-      type="day"  //types are -> day | 3day | week | month
+      type="day"  //types are -> '3days' | 'week' | 'day' | 'custom' | 'month'
       eventDate={{ year:2023, month:9, date:23, }} // it is mandatory if you want to use 'type' attribute.
     />
 
