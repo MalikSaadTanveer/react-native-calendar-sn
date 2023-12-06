@@ -17,12 +17,13 @@ import { EventContext } from '../utils/context';
 interface CalendarEventProps {
   events: any;
   type?:any;
-  eventDate?:any,
-  setEventDate?:any
-  onEventPress?:any
+  eventDate?:any;
+  setEventDate?:any;
+  onEventPress?:any;
+  onEmptySlotPress?:any
 }
 
-function CalendarNavigation({ events, type, eventDate, onEventPress, setEventDate }: CalendarEventProps) {
+function CalendarNavigation({ events, type, eventDate, onEventPress, onEmptySlotPress, setEventDate }: CalendarEventProps) {
   // const [myEvents, setMyEvents] = useState<any>( events ||
   //   [{
   //     title: 'Hello to everyone',
@@ -34,40 +35,12 @@ function CalendarNavigation({ events, type, eventDate, onEventPress, setEventDat
   useEffect(() => {
     LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
     LogBox.ignoreAllLogs();
-    // setMyEvents(events ||
-    //   [{
-    //     title: 'Hello to everyone',
-    //     start: dayjs().add(1, 'day').set('hour', 2).set('minute', 45).toDate(),
-    //     end: dayjs().add(1, 'day').set('hour', 7).set('minute', 30).toDate(),
-    //   },])
+   
   }, []);
 
-  // const opacityTransition: object = {
-  //   gestureDirection: 'horizontal', // we will swipe right if we want to close the screen;
-  //   transitionSpec: {
-  //     open: {
-  //       animation: 'timing',
-  //     },
-  //     close: {
-  //       animation: 'timing',
-  //       config: {
-  //         duration: 300,
-  //       },
-  //     },
-  //   },
-  //   cardStyleInterpolator: ({
-  //     current,
-  //   }: {
-  //     current: { progress: number };
-  //   }) => ({
-  //     cardStyle: {
-  //       opacity: current.progress,
-  //     }, // updates the opacity depending on the transition progress value of the current screen
-  //   }),
-  // };
-
+ 
   return (
-    <EventContext.Provider value={{ myEvents:events, type, onEventPress, eventDate, setEventDate }}>
+    <EventContext.Provider value={{ myEvents:events, type, onEventPress,onEmptySlotPress, eventDate, setEventDate }}>
       <GestureHandlerRootView
         style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
       >

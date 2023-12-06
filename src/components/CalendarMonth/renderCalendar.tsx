@@ -21,7 +21,7 @@ type RenderCalendarTypes = {
   setViewHeight?: any;
   navigation?: any;
   setScrollEnabled?: any;
-
+  onLayout?:any,
   scrollViewRef?: any;
   monthAPIData?: any;
 };
@@ -29,11 +29,12 @@ type RenderCalendarTypes = {
 const RenderCalendar = ({
   opacity,
   num,
+  // onLayout,
   // setViewHeight,
   navigation,
   // setScrollEnabled,
   // setDynamicViewHeight,
-  scrollViewRef,
+  
   monthAPIData,
 }: RenderCalendarTypes): JSX.Element => {
   
@@ -236,50 +237,20 @@ const RenderCalendar = ({
     }
 
     calendar.push(
-      // <PinchGestureHandler
-      //   ref={pinchRef}
-      //   onGestureEvent={opacity && pinchGestureHandler}
-      //   onHandlerStateChange={
-      //     opacity
-      //       ? ({ nativeEvent }) => {
-      //           if (nativeEvent.state === State.END) {
-      //             if (scale.value < 1) {
-      //               console.warn('go back');
-      //               return;
-      //             }
-      //             handleZoomIn();
-      //           }
-      //         }
-      //       : undefined
-      //   }
-      // >
-      //   <Animated.View ref={viewRef}>
-      //     <Animated.View
-      //       style={[
-      //         styles.calendarContainer,
-      //         opacity && animatedStyle,
-      //         { opacity: opacity ? 1 : 0.3 },
-      //       ]}
-      //       key={num}
-      //     >
+      
       <View style={styles.row} key={`${currentDate.format('YYYY-MM-DD')}-week`}>
         {week}
       </View>
-      //     </Animated.View>
-      //   </Animated.View>
-      // </PinchGestureHandler>
+     
     );
   }
 
-  {
-    /* <Text style={styles.header}>{currentDate1.format('MMMM YYYY')}</Text> */
-  }
   
   return (
     <>
       <PinchGestureHandler
         ref={pinchRef}
-        waitFor={() => !scrollViewRef.current.isScrolling}
+        // waitFor={() => !scrollViewRef.current.isScrolling}
         onGestureEvent={opacity ? pinchGestureHandler : undefined}
         onHandlerStateChange={
           opacity
@@ -300,6 +271,7 @@ const RenderCalendar = ({
       >
         <Animated.View ref={viewRef}>
           <Animated.View
+          // onLayout={onLayout}
             ref={dynamicViewRef}
             style={[
               styles.calendarContainer,

@@ -24,6 +24,8 @@ import { typedMemo } from '../utils/react'
 import { CalendarEvent } from './CalendarEvent'
 import { HourGuideCell } from './HourGuideCell'
 import { HourGuideColumn } from './HourGuideColumn'
+import { AuthContext } from '../../utils/context';
+
 
 const styles = StyleSheet.create({
   nowIndicator: {
@@ -83,6 +85,8 @@ function _CalendarBody<T extends ICalendarEventBase>({
 }: CalendarBodyProps<T>) {
   const scrollView = React.useRef<ScrollView>(null)
   const { now } = useNow(!hideNowIndicator)
+  const { currentStateClicked, setCurrentStateClicked }: any = React.useContext(AuthContext);
+
 
   React.useEffect(() => {
     let timeout: NodeJS.Timeout
@@ -115,8 +119,9 @@ function _CalendarBody<T extends ICalendarEventBase>({
   const _onPressCell = React.useCallback(
     (date: dayjs.Dayjs) => {
       onPressCell && onPressCell(date.toDate())
+      setCurrentStateClicked(date.toDate())
     },
-    [onPressCell],
+    [onPressCell,currentStateClicked],
   )
 
   const _renderMappedEvent = React.useCallback(
@@ -196,6 +201,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
                   onPress={_onPressCell}
                   index={index}
                   calendarCellStyle={calendarCellStyle}
+                  currentStateClicked={currentStateClicked}
                 />
               ))}
 

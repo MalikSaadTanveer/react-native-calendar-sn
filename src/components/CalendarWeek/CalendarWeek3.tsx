@@ -10,10 +10,10 @@ import { AuthContext, EventContext } from '../../utils/context';
 const height = Dimensions.get('window').height;
 const CalendarWeek3 = ({route}:any) => {
   const { calendar, eventInfo } = route.params;
-
+  const [currentStateClicked, setCurrentStateClicked] = useState<any>('') // For getting the + sign
   
   const [mode, setMode]:any = useState('week');
-  const { myEvents,type, onEventPress, eventDate, setEventDate }: any = useContext(EventContext);
+  const { myEvents,type, onEventPress, onEmptySlotPress, eventDate, setEventDate }: any = useContext(EventContext);
   const _calendar = eventDate || eventInfo || calendar
   const [calendarDate, setCalendarDate]:any = useState(moment([_calendar.year, _calendar.month -1, _calendar.date]))
 
@@ -31,7 +31,7 @@ const CalendarWeek3 = ({route}:any) => {
   },[eventDate])
 
   return (
-    <AuthContext.Provider value={{mode, setMode}}>
+    <AuthContext.Provider value={{mode, setMode, currentStateClicked, setCurrentStateClicked}}>
       <Calendar
         events={myEvents}
         height={height}
@@ -69,8 +69,12 @@ const CalendarWeek3 = ({route}:any) => {
         }}
         onPressCell={(date) => {
           // console.log(moment.parseZone(date, 'HH:mm'));
-          console.log(date);
+          // console.log(date);
+          if(onEmptySlotPress && date.toString() === currentStateClicked.toString() ) {
+            onEmptySlotPress(date)
+          }
         }}
+        
         onPressDateHeader={(date)=>{
           console.log(date)
           setCalendarDate(date)
