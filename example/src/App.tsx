@@ -61,7 +61,7 @@ export default function App() {
       },
    
       ]} // type="day"  eventDate={{ year:2023, month:9, date:23, }}
-      // onEmptySlotPress={(date:any)=>{console.log("I am outer",date)}}
+      onEmptySlotPress={(date:any)=>{console.log("I am outer",date)}}
     />
   );
 }

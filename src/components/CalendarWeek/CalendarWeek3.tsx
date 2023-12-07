@@ -31,7 +31,7 @@ const CalendarWeek3 = ({route}:any) => {
   },[eventDate])
 
   return (
-    <AuthContext.Provider value={{mode, setMode, currentStateClicked, setCurrentStateClicked}}>
+    <AuthContext.Provider value={{mode, setMode, currentStateClicked}}>
       <Calendar
         events={myEvents}
         height={height}
@@ -68,10 +68,9 @@ const CalendarWeek3 = ({route}:any) => {
         
         }}
         onPressCell={(date) => {
-          // console.log(moment.parseZone(date, 'HH:mm'));
-          // console.log(date);
-          if(onEmptySlotPress && date.toString() === currentStateClicked.toString() ) {
-            onEmptySlotPress(date)
+          if(onEmptySlotPress){
+            if(currentStateClicked && (currentStateClicked.toString() === date.toString())) onEmptySlotPress(date)
+            else setCurrentStateClicked(date)
           }
         }}
         

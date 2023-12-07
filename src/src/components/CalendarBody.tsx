@@ -85,7 +85,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
 }: CalendarBodyProps<T>) {
   const scrollView = React.useRef<ScrollView>(null)
   const { now } = useNow(!hideNowIndicator)
-  const { currentStateClicked, setCurrentStateClicked }: any = React.useContext(AuthContext);
+  const { currentStateClicked }: any = React.useContext(AuthContext);
 
 
   React.useEffect(() => {
@@ -119,7 +119,7 @@ function _CalendarBody<T extends ICalendarEventBase>({
   const _onPressCell = React.useCallback(
     (date: dayjs.Dayjs) => {
       onPressCell && onPressCell(date.toDate())
-      setCurrentStateClicked(date.toDate())
+      // setCurrentStateClicked(date.toDate())
     },
     [onPressCell,currentStateClicked],
   )

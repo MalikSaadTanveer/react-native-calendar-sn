@@ -33,9 +33,7 @@ const _HourGuideCell = ({
   )
    
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      onPress(date.hour(hour).minute(0))
-      }}>
+    <TouchableWithoutFeedback onPress={() => onPress(date.hour(hour).minute(0))}>
       <View
         style={[
           u['border-l'],
@@ -49,7 +47,10 @@ const _HourGuideCell = ({
       {
       currentStateClicked.toString() === 
       date.hour(hour).minute(0).toDate().toString() && 
-      <Text style={{color:'grey',fontSize:20}}>+</Text>  }
+      <Text style={{color:'grey',fontSize:20}}>
+        +
+      </Text>  
+      }
       </View>
       
     </TouchableWithoutFeedback>
