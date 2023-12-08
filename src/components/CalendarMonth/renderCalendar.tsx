@@ -29,7 +29,7 @@ type RenderCalendarTypes = {
 const RenderCalendar = ({
   opacity,
   num,
-  // onLayout,
+  onLayout,
   // setViewHeight,
   navigation,
   // setScrollEnabled,
@@ -271,7 +271,7 @@ const RenderCalendar = ({
       >
         <Animated.View ref={viewRef}>
           <Animated.View
-          // onLayout={onLayout}
+          onLayout={onLayout}
             ref={dynamicViewRef}
             style={[
               styles.calendarContainer,
