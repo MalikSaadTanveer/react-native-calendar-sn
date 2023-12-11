@@ -336,4 +336,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default RenderCalendar;
+export default React.memo(RenderCalendar);
