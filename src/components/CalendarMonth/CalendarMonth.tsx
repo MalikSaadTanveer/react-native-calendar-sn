@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useContext,
   useEffect,
-  useCallback,
+  // useCallback,
 } from 'react';
 import {
   View,
@@ -26,7 +26,6 @@ import dayjs from 'dayjs';
 const CalendarMonth: React.FC = ({ navigation }: any) => {
   const { myEvents }: any = useContext(EventContext);
   const [topItemIndex, setTopItemIndex] = useState(12); //0
-  const [topItemIndex2, setTopItemIndex2] = useState(12); //0
   const [numberOfMonths, setNumberOfMonths] = useState(
     // Array.from(Array(12).keys())
     Array.from(Array(25).keys(), (item) => item - 12)
@@ -183,14 +182,14 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     };
   // ,[]);
   // console.log(itemHeights)
-  const getItemLayout = useMemo(
-    () => (_: any, index: any) => ({
-      length: itemHeights[index] || 200, // Use the measured height or a default height
-      offset: itemHeights[index - 1] ? itemHeights[index - 1] : 0,
-      index,
-    }),
-    [itemHeights]
-  );
+  // const getItemLayout = useMemo(
+  //   () => (_: any, index: any) => ({
+  //     length: itemHeights[index] || 200, // Use the measured height or a default height
+  //     offset: itemHeights[index - 1] ? itemHeights[index - 1] : 0,
+  //     index,
+  //   }),
+  //   [itemHeights]
+  // );
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
