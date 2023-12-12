@@ -234,25 +234,38 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
 
 
   useEffect(()=>{
-    if(jumpToCurrentMonth && scrollViewRef.current){
-      let index = numberOfMonths.indexOf(0)
-      setTopItemIndex(index)
-      scrollViewRef.current.scrollToIndex({
-        index:index+1,
-        animated: false,
-        viewPosition: 0.5,
-      });
-      monthNamesRef.current.scrollToIndex({
-        index:index+1,
-        animated: false,
-        viewPosition: 0.5,
-      });
-      if(setJumpToCurrentMonth)  {
-        setJumpToCurrentMonth(false)
-        setEventDate()
-      }
-    
-   }
+ 
+      if(jumpToCurrentMonth && scrollViewRef.current && loader == false ){
+        console.log("hi")
+        let index = numberOfMonths.indexOf(0)
+        setTopItemIndex(index)
+        // scrollViewRef.current.scrollToIndex({
+        //   index:index+1,
+        //   animated: false,
+        //   viewPosition: 0.5,
+        // });
+        // monthNamesRef.current.scrollToIndex({
+        //   index:index+1,
+        //   animated: false,
+        //   viewPosition: 0.5,
+        // });
+        const offset = itemHeights
+        .slice(0, index)
+        .reduce((sum: any, height: any) => sum + height, 0);
+        scrollViewRef.current.scrollToOffset({
+          offset,
+          animated: false,
+        });
+        monthNamesRef.current.scrollToOffset({
+          offset: 37 * index,
+          animated: false,
+        });
+        if(setJumpToCurrentMonth)  {
+          setJumpToCurrentMonth(false)
+          setEventDate()
+        }
+     }
+   
   },[jumpToCurrentMonth])
 
   let renderItems = (item: any) => {
