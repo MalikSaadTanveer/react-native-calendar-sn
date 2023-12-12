@@ -62,7 +62,7 @@ const CalendarWeek3 = ({route}:any) => {
         }}
         weekDayHeaderHighlightColor={colors.primary}
         onPressEvent={(event: any) => {
-          console.log("I am event",event);
+          // console.log("I am event",event);
           
           if(onEventPress) onEventPress(event)
         
@@ -75,7 +75,7 @@ const CalendarWeek3 = ({route}:any) => {
         }}
         
         onPressDateHeader={(date)=>{
-          console.log(date)
+          // console.log(date)
           setCalendarDate(date)
           setMode('day')
         }}

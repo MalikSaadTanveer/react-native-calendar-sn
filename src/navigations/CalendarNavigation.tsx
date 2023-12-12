@@ -20,10 +20,12 @@ interface CalendarEventProps {
   eventDate?:any;
   setEventDate?:any;
   onEventPress?:any;
-  onEmptySlotPress?:any
+  onEmptySlotPress?:any,
+  jumpToCurrentMonth?:any,
+  setJumpToCurrentMonth?:any;
 }
 
-function CalendarNavigation({ events, type, eventDate, onEventPress, onEmptySlotPress, setEventDate }: CalendarEventProps) {
+function CalendarNavigation({ events, type, eventDate, onEventPress, onEmptySlotPress, setEventDate,jumpToCurrentMonth, setJumpToCurrentMonth }: CalendarEventProps) {
   // const [myEvents, setMyEvents] = useState<any>( events ||
   //   [{
   //     title: 'Hello to everyone',
@@ -40,7 +42,7 @@ function CalendarNavigation({ events, type, eventDate, onEventPress, onEmptySlot
 
  
   return (
-    <EventContext.Provider value={{ myEvents:events, type, onEventPress,onEmptySlotPress, eventDate, setEventDate }}>
+    <EventContext.Provider value={{ myEvents:events, type, onEventPress,onEmptySlotPress, eventDate, setEventDate,jumpToCurrentMonth,setJumpToCurrentMonth }}>
       <GestureHandlerRootView
         style={{ width: '100%', flexGrow: 1, backgroundColor: 'white' }}
       >

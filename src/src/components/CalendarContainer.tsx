@@ -277,14 +277,14 @@ function _CalendarContainer<T extends ICalendarEventBase>({
         (direction === 'LEFT' && !theme.isRTL) ||
         (direction === 'RIGHT' && theme.isRTL)
       ) {
-        console.log('Left');
+        // console.log('Left');
         if (viewRef.current) viewRef?.current?.animate('slideInRight');
         nextTargetDate = targetDate.add(modeToNum(mode, targetDate), 'day');
       } else {
         if (mode === 'month') {
           nextTargetDate = targetDate.add(targetDate.date() * -1, 'day');
         } else {
-          console.log('Right');
+          // console.log('Right');
           if (viewRef.current) viewRef?.current?.animate('slideInLeft');
           nextTargetDate = targetDate.add(
             modeToNum(mode, targetDate) * -1,

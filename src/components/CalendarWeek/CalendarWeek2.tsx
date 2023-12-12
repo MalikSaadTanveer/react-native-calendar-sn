@@ -260,7 +260,7 @@ const CalendarWeek = ({ navigation, route }: any) => {
     }
 
     setLoader(false);
-    console.log('I am full weekArr', weekArr);
+    // console.log('I am full weekArr', weekArr);
     setWeeks(weekArr);
   };
   // const monthSetup = () => {

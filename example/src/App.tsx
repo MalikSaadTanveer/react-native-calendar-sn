@@ -1,10 +1,14 @@
 import * as React from 'react';
+import { Button } from 'react-native';
 
 import { CalendarMonth } from 'react-native-calendar-sn';
 
 
 export default function App() {
+  const [jumpToCurrentMonth, setJumpToCurrentMonth] = React.useState<any>(null)  
   return (
+    <>
+    <Button title='Today' onPress={()=>{setJumpToCurrentMonth(true);console.log("press")}}/>
     <CalendarMonth
       events={[
         {
@@ -62,6 +66,10 @@ export default function App() {
    
       ]} // type="day"  eventDate={{ year:2023, month:9, date:23, }}
       onEmptySlotPress={(date:any)=>{console.log("I am outer",date)}}
+      setEventDate={()=>console.log("set")}
+      jumpToCurrentMonth={jumpToCurrentMonth}
+      setJumpToCurrentMonth={setJumpToCurrentMonth}
     />
+     </>
   );
 }

@@ -24,7 +24,7 @@ import { EventContext } from '../../utils/context';
 import { colors } from '../../utils/colors';
 import dayjs from 'dayjs';
 const CalendarMonth: React.FC = ({ navigation }: any) => {
-  const { myEvents }: any = useContext(EventContext);
+  const { myEvents,jumpToCurrentMonth,setEventDate, setJumpToCurrentMonth }: any = useContext(EventContext);
   const [topItemIndex, setTopItemIndex] = useState(12); //0
   const [numberOfMonths, setNumberOfMonths] = useState(
     // Array.from(Array(12).keys())
@@ -108,7 +108,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
   }, [isCalendarListTouched, isMonthListTouched]);
 
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
-    // console.log(viewableItems, 'viewableItems1');
+    
     if (viewableItems.length > 0 && isCalendarListTouchedRef.current) {
       setTopItemIndex(viewableItems[0].key);
       monthNamesRef.current.scrollToIndex({
@@ -200,7 +200,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     if (offsetY <= threshold) {
       setLoader(true);
       setTimeout(() => {
-        console.log('Reached the top!');
+        // console.log('Reached the top!');
         const newStartingPoint = numberOfMonths[0] || 0;
         const newNegativeItems = Array.from(Array(12).keys())
           .map((item) => newStartingPoint - (item + 1))
@@ -232,6 +232,29 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     }
   };
 
+
+  useEffect(()=>{
+    if(jumpToCurrentMonth && scrollViewRef.current){
+      let index = numberOfMonths.indexOf(0)
+      setTopItemIndex(index)
+      scrollViewRef.current.scrollToIndex({
+        index:index+1,
+        animated: false,
+        viewPosition: 0.5,
+      });
+      monthNamesRef.current.scrollToIndex({
+        index:index+1,
+        animated: false,
+        viewPosition: 0.5,
+      });
+      if(setJumpToCurrentMonth)  {
+        setJumpToCurrentMonth(false)
+        setEventDate()
+      }
+    
+   }
+  },[jumpToCurrentMonth])
+
   let renderItems = (item: any) => {
     return (
       <RenderCalendar
@@ -249,9 +272,9 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
 
   useEffect(() => {
     if (!hasEffectRun.current) {
-      console.log('hello1');
+      // console.log('hello1');
       if (itemHeights.length > 12) {
-        console.log('hello2');
+        // console.log('hello2');
 
         hasEffectRun.current = true;
         const offset = itemHeights
