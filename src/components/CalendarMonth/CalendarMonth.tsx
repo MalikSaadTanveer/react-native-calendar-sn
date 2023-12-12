@@ -1,6 +1,13 @@
 import 'react-native-gesture-handler';
 import _ from 'lodash';
-import React, { useState, useRef, useMemo, useContext, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'react';
 import {
   View,
   Text,
@@ -19,6 +26,7 @@ import dayjs from 'dayjs';
 const CalendarMonth: React.FC = ({ navigation }: any) => {
   const { myEvents }: any = useContext(EventContext);
   const [topItemIndex, setTopItemIndex] = useState(12); //0
+  const [topItemIndex2, setTopItemIndex2] = useState(12); //0
   const [numberOfMonths, setNumberOfMonths] = useState(
     // Array.from(Array(12).keys())
     Array.from(Array(25).keys(), (item) => item - 12)
@@ -144,42 +152,45 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
 
   const onEndReached = () => {
     setLoader(true);
-    // setTimeout(() => {
-      // setNumberOfMonths((prevMonths: any) => {
-      //   let arr = [...prevMonths];
-      //   for (let i = 0; i < 12; i++) {
-      //     arr.push(prevMonths?.length - 1 + 1 + i);
-      //   }
-      //   return arr;
-      // });
+    setTimeout(() => {
+    // setNumberOfMonths((prevMonths: any) => {
+    //   let arr = [...prevMonths];
+    //   for (let i = 0; i < 12; i++) {
+    //     arr.push(prevMonths?.length - 1 + 1 + i);
+    //   }
+    //   return arr;
+    // });
 
-      const lastItem = numberOfMonths[numberOfMonths.length - 1];
-      const newItems = Array.from(Array(12).keys()).map(
-        (item) => item + (lastItem !== undefined ? lastItem : 0) + 1
-      );
-      setNumberOfMonths((prevArray) => prevArray.concat(newItems));
+    const lastItem = numberOfMonths[numberOfMonths.length - 1];
+    const newItems = Array.from(Array(12).keys()).map(
+      (item) => item + (lastItem !== undefined ? lastItem : 0) + 1
+    );
+    setNumberOfMonths((prevArray) => prevArray.concat(newItems));
 
-      setLoader(false);
-    // }, 200);
+    setLoader(false);
+    }, 200);
   };
 
-  const handleItemLayout = 
-  // useCallback((event: any, index: any) => 
-  (event: any, index: any) => {
-    const { height } = event.nativeEvent.layout;
-    setItemHeights((prevHeights: any) => {
-      const newHeights = [...prevHeights];
-      newHeights[index] = height;
-      return newHeights;
-    });
-  } 
+  const handleItemLayout =
+    // useCallback((event: any, index: any) =>
+    (event: any, index: any) => {
+      const { height } = event.nativeEvent.layout;
+      setItemHeights((prevHeights: any) => {
+        const newHeights = [...prevHeights];
+        newHeights[index] = height;
+        return newHeights;
+      });
+    };
   // ,[]);
   // console.log(itemHeights)
-  const getItemLayout = useMemo(() => (_: any, index: any) => ({
-    length: itemHeights[index] || 200, // Use the measured height or a default height
-    offset: itemHeights[index - 1] ? itemHeights[index - 1] : 0,
-    index,
-  }), [itemHeights]);
+  const getItemLayout = useMemo(
+    () => (_: any, index: any) => ({
+      length: itemHeights[index] || 200, // Use the measured height or a default height
+      offset: itemHeights[index - 1] ? itemHeights[index - 1] : 0,
+      index,
+    }),
+    [itemHeights]
+  );
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -188,61 +199,60 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
     const threshold = 0;
     // console.log("offsetY",offsetY)
     if (offsetY <= threshold) {
-      setLoader(true)
-      setTimeout(()=>{
-      console.log('Reached the top!');
-      const newStartingPoint = numberOfMonths[0] || 0;
-      const newNegativeItems = Array.from(Array(12).keys())
-        .map((item) => newStartingPoint - (item + 1))
-        .reverse();
-      setNumberOfMonths((prevArray) => [...newNegativeItems, ...prevArray]);
-      // console.log(newNegativeItems, numberOfMonths)
-      if (itemHeights.length > 12) {
-        // const offset = itemHeights
-        //   .slice(0, 12)
-        //   .reduce((sum: any, height: any) => sum + height, 0);
+      setLoader(true);
+      setTimeout(() => {
+        console.log('Reached the top!');
+        const newStartingPoint = numberOfMonths[0] || 0;
+        const newNegativeItems = Array.from(Array(12).keys())
+          .map((item) => newStartingPoint - (item + 1))
+          .reverse();
+        setNumberOfMonths((prevArray) => [...newNegativeItems, ...prevArray]);
+        // console.log(newNegativeItems, numberOfMonths)
+        if (itemHeights.length > 12) {
+          // const offset = itemHeights
+          //   .slice(0, 12)
+          //   .reduce((sum: any, height: any) => sum + height, 0);
 
-        // Scroll to the calculated offset when the component mounts
-        // scrollViewRef.current.scrollToOffset({
-        //   offset,
-        //   animated: false,
-        // });
-        setTopItemIndex(12);
-        scrollViewRef.current.scrollToIndex({
-          index:12,
-          animated: false,
-        });
-        monthNamesRef.current.scrollToIndex({
-          index:12,
-          animated: false,
-        });
-        setLoader(false)
-      }
-      },200)
+          // Scroll to the calculated offset when the component mounts
+          // scrollViewRef.current.scrollToOffset({
+          //   offset,
+          //   animated: false,
+          // });
+          setTopItemIndex(12);
+          scrollViewRef.current.scrollToIndex({
+            index: 12,
+            animated: false,
+          });
+          monthNamesRef.current.scrollToIndex({
+            index: 12,
+            animated: false,
+          });
+          setLoader(false);
+        }
+      }, 200);
     }
   };
 
   let renderItems = (item: any) => {
-      return (
-        <RenderCalendar
-          onLayout={(event: any) => handleItemLayout(event, item.index)}
-          opacity={topItemIndex === item.index}
-          // num={item.index}
-          num={item.item[item.index]}
-          key={item.index}
-          navigation={navigation}
-          // scrollViewRef={scrollViewRef}
-          monthAPIData={monthAPIData}
-        />
-      );
-    };
-  
+    return (
+      <RenderCalendar
+        onLayout={(event: any) => handleItemLayout(event, item.index)}
+        opacity={topItemIndex === item.index}
+        // num={item.index}
+        num={item.item[item.index]}
+        key={item.index}
+        navigation={navigation}
+        // scrollViewRef={scrollViewRef}
+        monthAPIData={monthAPIData}
+      />
+    );
+  };
 
   useEffect(() => {
     if (!hasEffectRun.current) {
-      console.log("hello1")
+      console.log('hello1');
       if (itemHeights.length > 12) {
-        console.log("hello2")
+        console.log('hello2');
 
         hasEffectRun.current = true;
         const offset = itemHeights
@@ -255,13 +265,23 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
           animated: false,
         });
         monthNamesRef.current.scrollToOffset({
-          offset:440,
+          offset: 440,
           animated: false,
         });
-        
       }
     }
   }, [itemHeights]);
+
+  // useEffect(() => {
+  //   scrollViewRef.current.scrollToOffset({
+  //     offset: 2496,
+  //     animated: false,
+  //   });
+  //   monthNamesRef.current.scrollToOffset({
+  //     offset: 440,
+  //     animated: false,
+  //   });
+  // }, []);
 
   // useEffect(() => {
   //   if (itemHeights.length > 12) {
@@ -288,7 +308,7 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         getItem={() => numberOfMonths}
         keyExtractor={(_: any, index: any) => index}
         scrollEventThrottle={16}
-        viewabilityConfig={{viewAreaCoveragePercentThreshold: 50, }}
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
@@ -299,16 +319,19 @@ const CalendarMonth: React.FC = ({ navigation }: any) => {
         refreshing={true}
         // getItemLayout={getItemLayout}
         onScroll={handleScroll}
-        // onMomentumScrollEnd={(event)=>{
-        //   console.log(event.nativeEvent.contentOffset.y,"event")
+        // onMomentumScrollEnd={(event) => {
+        //   const offsetY = event.nativeEvent.contentOffset.y;
+        //   const index = Math.floor(offsetY / 208); // ITEM_HEIGHT is the height of each item
+
+        //   setTopItemIndex(index);
         // }}
       />
     );
-  }, [numberOfMonths, topItemIndex, myEvents]);
+  }, [numberOfMonths,topItemIndex, myEvents]);
 
   let renderMonthNames = useMemo(() => {
     return (item: any) => (
-      <View style={styles.monthNamesItems} >
+      <View style={styles.monthNamesItems}>
         <Text
           style={{
             ...styles.monthNamesItemsText,
@@ -416,7 +439,7 @@ const styles = StyleSheet.create({
   monthNamesItems: {
     // backgroundColor:'red',
     padding: 8,
-    height:37
+    height: 37,
   },
   monthNamesItemsText: {
     fontSize: 14,

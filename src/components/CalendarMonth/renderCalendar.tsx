@@ -299,6 +299,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   calendarContainer: {
+    // height:208,
+    // backgroundColor:'red'
   },
   row: {
     flexDirection: 'row',
@@ -336,4 +338,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default React.memo(RenderCalendar);
+// export default React.memo(RenderCalendar);
+export default RenderCalendar;
